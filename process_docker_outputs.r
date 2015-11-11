@@ -25,8 +25,8 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
   
     # install and soure R packages
     install.packages(c("RCurl","devtools", "RJSONIO"))
-    install_github(repo="MG-RAST/matR", dependencies=FALSE, ref="early-release")
     library(RCurl, devtools, RJSONIO, matR)
+    install_github(repo="MG-RAST/matR", dependencies=FALSE, ref="early-release")
     dependencies()
     ############################################################################################################################
     # Source this function to donwload accessory functions - in this example they are all hosted on github
