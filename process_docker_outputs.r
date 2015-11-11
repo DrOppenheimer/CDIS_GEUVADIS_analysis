@@ -82,7 +82,10 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
     if(debug==TRUE){print(paste(my_ids[i]))}  
   
     if( file.exists(paste(".", my_ids[i], sep="")) != FALSE ){
-  
+        if(debug==TRUE){print(paste("FILE_STATUS: ", file.exists(paste(".", my_ids[i], sep=""))))}
+    ### shell version of check:
+    ### for i in `cat stuti_results.done_11-10-15`; do if [ -f ".$i" ];then echo ".$i exists"; fi; done
+        
         my_data_temp <- import_metadata(paste(".", my_ids[i], sep=""))
   
         if(debug==TRUE){print(paste(".", my_ids[i], sep=""))}
