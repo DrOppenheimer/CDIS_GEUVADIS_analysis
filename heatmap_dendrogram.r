@@ -1,6 +1,6 @@
 # Majority of this code is adapted from heatmap.2{gplots}
 
- <- function (
+heatmap_dendrogram <- function (
 
                                           file_in,
                                           file_type="file",
