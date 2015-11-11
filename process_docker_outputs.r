@@ -207,13 +207,13 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
 ### PERFORM ANALYSES
 ############################################################################################################################
 ############################################################################################################################
-analyze_combined_output <- function(data_file="", metadata_file=""){
+#analyze_combined_output <- function(data_file="", metadata_file=""){
 
   # norm & look at pre and post normalization distributios (select appropriate stat test for later)
   
 
   # raw PCoA
-  plot_pco("")
+ # plot_pco("")
 
   # render PCoA with metadata (population and lab) (all data)
   
@@ -231,139 +231,3 @@ analyze_combined_output <- function(data_file="", metadata_file=""){
 
 ############################################################################################################################
 ############################################################################################################################
-
-
-
-
-
-
-############################################################################################################################
-# simple data import function
-import_data <- function(file_name)
-{
-  data.matrix(read.table(file_name, row.names=1, header=TRUE, sep="\t", comment.char="", quote="", check.names=FALSE))
-}
-############################################################################################################################
-
-############################################################################################################################
-# simple data export function
-export_data <- function(data_object, file_name){
-  write.table(data_object, file=file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
-}
-############################################################################################################################
-
-############################################################################################################################
-# a function to download metadata from MG-RAST
-source_https("https://raw.githubusercontent.com/DrOppenheimer/matR-apps/master/get_metadata.R")
-############################################################################################################################
-
-############################################################################################################################
-# a function to import metadata that has already been downloaded and written to a flat file (using get_metadata and export_data)
-source_https("https://raw.githubusercontent.com/DrOppenheimer/matR-apps/master/import_metadata.r")
-############################################################################################################################
-
-############################################################################################################################
-# function to produce raw pco (performs the calculations and produces a flat file output but does not create images/vizualizations)
-# PCoAs can be calculated from raw or normalized annotation abundance data with a variety of distance/dissimilarity metrics.
-source_https("https://raw.githubusercontent.com/MG-RAST/AMETHST/master/plot_pco.r")
-############################################################################################################################
-
-############################################################################################################################
-# Function to perform filtering (removal of singletons and extreme low abundance entries) and normalization (with a number
-# different methods including log transformation and standardization, negative bionomial based variance stabiliation(with
-# the DESeq package), and quantile normalization )
-source_https("https://raw.githubusercontent.com/DrOppenheimer/matR-apps/master/normalize_fun.2-27-14/norm_redux.v5.r")
-############################################################################################################################
-
-############################################################################################################################
-# function to perform calculations for and to generate heatmaps from raw or normalized annotation abundance data.
-# The function can also use metadata to annotate the image automatically
-source_https("https://raw.githubusercontent.com/DrOppenheimer/matR-apps/master/heatmap_fun/heatmap_dendrogram.from_file.3-18-14.r")
-############################################################################################################################
-
-############################################################################################################################
-# function to read IDs from a list file - one file listed per line
-readIDs <- function (filename, ...) 
-{
-  y <- read.table(filename, colClasses = "character", sep = "\t", 
-                  ...)
-  if (nrow(y) > 1) {
-    if (ncol(y) > 1) {
-      if (ncol(y) > 2) {
-        warning("Your list has more than two columns, only the first two are used")
-      }
-      res <- as.character(y[, 1])
-      names(res) <- as.character(y[, 2])
-      res <- res[order(res)]
-      res
-    }
-    else {
-      res <- as.character(y[, 1])
-      res <- res[order(res)]
-      res
-    }
-  }
-  else {
-    warning("There was just one id in your list?")
-    res <- unlist(y[1, ], use.names = FALSE)
-    res
-  }
-}
-############################################################################################################################
-
-
-# sort the data (COLUMNWISE) by id
-sample_names <- order(colnames(input_data))
-input_data <- input_data[,sample_names]
-  
-  
-  
-  
-  
-  
-  
-  
-  
-      
-    
-  
-  my_data <- merge(my_data, data.matrix(next_batch$count), by="row.names", all=TRUE) # This does not handle metadata yet
-  rownames(my_data) <- my_data$Row.names
-  my_data$Row.names <- NULL
-  
-  
-  
-  first_batch <- process_batch(batch_count, batch_start, batch_end, mgid_list, my_log, my_entry, my_annot, my_source, my_level, sleep_int, debug, num_batch, batch_remainder)
-  my_data <- data.matrix(first_batch$count)
-  
-  
-  
-  
-}
-
-
-
-
-
-my_data_name <- character()
-for(i in 1:length(split_path_string) ){
-  if ( grep(pattern="ERR", split_path_string[i])  ){
-    my_data_name <- split_path_string[i]
-  }
-}
-
-
-# Read in the data files and create a matrix of the abundance values
-
-
-# 
-
-
-
-
-
-                                        # Function to import data from an individual results file
-
-
-
-
