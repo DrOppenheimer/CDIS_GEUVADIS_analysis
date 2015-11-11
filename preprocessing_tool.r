@@ -1,4 +1,4 @@
-preprocessing_tool <<- function(
+preprocessing_tool <- function(
                                   data_in,     # name of the input file (tab delimited text with the raw counts) or R matrix
                                   data_type             ="file",  # c(file, r_matrix)
                                   output_object         ="default", # output R object (matrix)

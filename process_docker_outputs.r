@@ -63,9 +63,9 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
         source("~/git/install_r_prereqs.r")
         install_r_prereqs()
     }
-    
-    my_ids <- readIDs(paths_file)  
 
+    my_ids <- readIDs(paths_file)  
+    
     # names for log and output
     log_file <- paste("R_compile.", my_dataype, ".log.txt", sep="")
     output_name <- paste("combined_", my_dataype, ".txt", sep ="")
@@ -80,62 +80,80 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
   
     for (i in 1:length(my_ids)){
   
-    if(debug==TRUE){print(paste("made it here (0)"))}
+        if(debug==TRUE){print(paste("made it here (0)"))}
 
-    if(debug==TRUE){print(paste(my_ids[i]))}  
+        if(debug==TRUE){print(paste(my_ids[i]))}  
   
-    if( file.exists(paste(".", my_ids[i], sep="")) != FALSE ){
-        if(debug==TRUE){print(paste("FILE_STATUS: ", file.exists(paste(".", my_ids[i], sep=""))))}
-        ### shell version of check:
-        ### for i in `cat stuti_results.done_11-10-15`; do if [ -f ".$i" ];then echo ".$i exists"; fi; done
+        if( file.exists(paste(".", my_ids[i], sep="")) != FALSE ){
+            if(debug==TRUE){print(paste("FILE_STATUS: ", file.exists(paste(".", my_ids[i], sep=""))))}
+            ### shell version of check:
+            ### for i in `cat stuti_results.done_11-10-15`; do if [ -f ".$i" ];then echo ".$i exists"; fi; done
         
-        my_data_temp <- import_metadata(paste(".", my_ids[i], sep=""))
-  
-        if(debug==TRUE){print(paste(".", my_ids[i], sep=""))}
+            my_data_temp <- import_metadata(paste(".", my_ids[i], sep=""))
+            
+            if(debug==TRUE){print(paste(".", my_ids[i], sep=""))}
 
-        if(debug==TRUE){print(paste("made it here (0.1)"))}
-        # Add name of current file to the colnames vector
-        split_path_string <- unlist(strsplit(my_ids[i], split="/"))
-        my_data_name <- split_path_string[2]
+            if(debug==TRUE){print(paste("made it here (0.1)"))}
+            # Add name of current file to the colnames vector
+            split_path_string <- unlist(strsplit(my_ids[i], split="/"))
+            my_data_name <- split_path_string[2]
 
-        if(debug==TRUE){print(paste("made it here (0.2)"))}
-        my_rownames <- row.names(my_data_temp) # NOT HUMAN READABLE
-        # my_rownames <- my_data_temp[,"gene_short_name"] # NOT UNIQUE
-        # COMPROMISE - UNIQUE AND CAN GET READABLE NAME EASILY
-        unique_rownames <- vector(mode="character")
-        for ( j in 1:length(my_rownames) ){
-            unique_rownames <- c(unique_rownames, paste(my_data_temp[j,"gene_short_name"], "_", my_rownames[j], sep=""))
-        }
+            if(debug==TRUE){print(paste("made it here (0.2)"))}
+            my_rownames <- row.names(my_data_temp) # NOT HUMAN READABLE
+            # my_rownames <- my_data_temp[,"gene_short_name"] # NOT UNIQUE
+            # COMPROMISE - UNIQUE AND CAN GET READABLE NAME EASILY
+            unique_rownames <- vector(mode="character")
+            for ( j in 1:length(my_rownames) ){
+                unique_rownames <- c(unique_rownames, paste(my_data_temp[j,"gene_short_name"], "_", my_rownames[j], sep=""))
+            }
 
-        if(debug==TRUE){print(paste("made it here (0.3)"))}
-        # replace original rownames with concatenated ones   
-        row.names(my_data_temp) <- unique_rownames
+            if(debug==TRUE){print(paste("made it here (0.3)"))}
+            # replace original rownames with concatenated ones   
+            row.names(my_data_temp) <- unique_rownames
     
-        if(debug==TRUE){print(paste("made it here (1)"))}
+            if(debug==TRUE){print(paste("made it here (1)"))}
   
-        if( i==1 ){ # import first sample data
-            FPKM_matrix <- my_data_temp[ , my_dataype, drop=FALSE] # matrix(my_data_temp[,my_dataype])
-            row.names(FPKM_matrix) <- unique_rownames 
-            FPKM_colnames <- my_data_name
-            if(debug==TRUE){print(paste("made it here (2)"))}
-            if(debug==TRUE){print(paste("i: ", i))}
-            #cat("World",file="outfile.txt",append=TRUE)
-            cat(paste(my_ids[i], "PROCESSED"), sep="\n", file=log_file, append=FALSE)
-        }else{ # import all other datasets - subloop to take care of the last
-            # Import the data into an R matrix
-            if(debug==TRUE){print(paste("made it here (3)"))}
-            #FPKM_matrix <- matrix(my_data_temp[,my_dataype])
-            #row.names(FPKM_matrix) <- unique_rownames
-            FPKM_matrix <- merge(FPKM_matrix, my_data_temp[, my_dataype], by="row.names", all=TRUE) # This does not handle metadata yet
-            rownames(FPKM_matrix) <- FPKM_matrix$Row.names
-            FPKM_matrix$Row.names <- NULL
-            FPKM_colnames <- c(FPKM_colnames, my_data_name)
-            if(debug==TRUE){print(paste("col_names:", FPKM_colnames))}
-            # subloop to add the column names when on the last sample (make this a sub)
-            cat(paste(my_ids[i], "PROCESSED"), sep="\n", file=log_file, append=TRUE)
-            if( i == length(my_ids) ){ # take care of the last sample (add column headers)
-                if(debug==TRUE){print(paste("made it here (4)"))}
+            if( i==1 ){ # import first sample data
+                FPKM_matrix <- my_data_temp[ , my_dataype, drop=FALSE] # matrix(my_data_temp[,my_dataype])
+                row.names(FPKM_matrix) <- unique_rownames 
+                FPKM_colnames <- my_data_name
+                if(debug==TRUE){print(paste("made it here (2)"))}
+                if(debug==TRUE){print(paste("i: ", i))}
+                #cat("World",file="outfile.txt",append=TRUE)
+                cat(paste(my_ids[i], "PROCESSED"), sep="\n", file=log_file, append=FALSE)
+            }else{ # import all other datasets - subloop to take care of the last
+                # Import the data into an R matrix
+                if(debug==TRUE){print(paste("made it here (3)"))}
+                #FPKM_matrix <- matrix(my_data_temp[,my_dataype])
+                #row.names(FPKM_matrix) <- unique_rownames
+                FPKM_matrix <- merge(FPKM_matrix, my_data_temp[, my_dataype], by="row.names", all=TRUE) # This does not handle metadata yet
+                rownames(FPKM_matrix) <- FPKM_matrix$Row.names
+                FPKM_matrix$Row.names <- NULL
+                FPKM_colnames <- c(FPKM_colnames, my_data_name)
                 if(debug==TRUE){print(paste("col_names:", FPKM_colnames))}
+                # subloop to add the column names when on the last sample (make this a sub)
+                cat(paste(my_ids[i], "PROCESSED"), sep="\n", file=log_file, append=TRUE)
+                if( i == length(my_ids) ){ # take care of the last sample (add column headers)
+                    if(debug==TRUE){print(paste("made it here (4)"))}
+                    if(debug==TRUE){print(paste("col_names:", FPKM_colnames))}
+                    # add column names
+                    colnames(FPKM_matrix) <- FPKM_colnames
+                    # replace introduced NAs with 0
+                    FPKM_matrix[is.na(FPKM_matrix)] <- 0
+                    # order data by row name
+                    ordered_rownames <- order(rownames(FPKM_matrix))
+                    FPKM_matrix <- FPKM_matrix[ordered_rownames,]
+                    # export to flat file
+                    export_data(FPKM_matrix, output_name)
+                    # return data object here
+                }
+            }
+
+        }else{
+    
+            cat(paste(my_ids[i], "DOES NOT EXIST"), sep="\n", file=log_file, append=TRUE)
+            # subloop to add the column names when on the last sample (make this a sub)
+            if( i == length(my_ids) ){ # take care of the last sample (add column headers)
                 # add column names
                 colnames(FPKM_matrix) <- FPKM_colnames
                 # replace introduced NAs with 0
@@ -147,30 +165,14 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
                 export_data(FPKM_matrix, output_name)
                 # return data object here
             }
-        }
-
-    }else{
     
-        cat(paste(my_ids[i], "DOES NOT EXIST"), sep="\n", file=log_file, append=TRUE)
-        # subloop to add the column names when on the last sample (make this a sub)
-        if( i == length(my_ids) ){ # take care of the last sample (add column headers)
-            # add column names
-            colnames(FPKM_matrix) <- FPKM_colnames
-            # replace introduced NAs with 0
-            FPKM_matrix[is.na(FPKM_matrix)] <- 0
-            # order data by row name
-            ordered_rownames <- order(rownames(FPKM_matrix))
-            FPKM_matrix <- FPKM_matrix[ordered_rownames,]
-            # export to flat file
-            export_data(FPKM_matrix, output_name)
-            # return data object here
         }
-    
-    }
   
-}
+    }
 
 }
+
+
 ############################################################################################################################
 ############################################################################################################################
 ### PERFORM ANALYSES
@@ -178,19 +180,33 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
 ############################################################################################################################
 #analyze_combined_output <- function(data_file="", metadata_file=""){
 
+# combined_FPKM_metadata.txt
+# combined_FPKM.txt
+
+  # import the data table
+  #import_data(file_name="combined_FPKM.txt")
+
+  setwd("/Users/kevin/Documents/Projects/Geuvadis_data/genes_fpkm_files.11-11-15/my_data")
+
   # norm & look at pre and post normalization distributios (select appropriate stat test for later)
-  
+  preprocessing_tool(data_in="combined_FPKM.txt", norm_method="quantile", produce_boxplots=TRUE)
 
   # raw PCoA
- # plot_pco("")
+  plot_pco(file_in="")
 
   # render PCoA with metadata (population and lab) (all data)
+  render_calcualted_pcoa(PCoA_in="")
+  
+  render_calcualted_pcoa(PCoA_in="", metadata_table="combined_FPKM_metadata.txt", use_all_metadata_columns=TRUE)
+  
   
   
   # heatmap dendrogram (all data)
-  
+  heatmap_dendrogram(file_in="", metadata_table="combined_FPKM_metadata.txt", metadata_column=1)
   
   # statistical test
+  calc_stats(data_table="", metadata_table="combined_FPKM_metadata.txt", metadata_column=1, stat_test="Kruskal-Wallis") # ANOVA-one-way
+  # more for subselection for matR Google group
   
   
   # viz from stat subselecteddata
