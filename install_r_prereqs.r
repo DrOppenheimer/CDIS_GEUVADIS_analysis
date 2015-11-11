@@ -1,5 +1,5 @@
 # install and soure R packages
-install_r_prereqs <- function(
+install_r_prereqs <- function(){
     install.packages("RCurl")
     install.packages("devtools")
     install.packages("RJSONIO")
