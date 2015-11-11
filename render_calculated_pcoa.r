@@ -19,7 +19,7 @@
 # users can also specify a pch table to control the shape of plotted icons (this feature may not be ready yet)
 # CHANGE OVER v12 - you can select which samples (rows in the eigen vector matrix) with "plot_samples" variable
 
-render <- render_calcualted_pcoa <- function(
+render_calcualted_pcoa <- function(
                             PCoA_in="", # annotation abundance table (raw or normalized values)
                             image_out="default",
                             figure_main ="principal coordinates",
