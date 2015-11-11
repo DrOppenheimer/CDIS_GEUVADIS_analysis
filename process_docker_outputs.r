@@ -17,10 +17,7 @@
 ############################################################################################################################
 
 # install and source R packages and functions if option is true - must be done for the other functions to work
-if( load_prereqs==TRUE ){
-    source("~/git/install_r_prereqs.r")
-    install_r_prereqs()
-}
+
 ############################################################################################################################
 ############################################################################################################################
 
@@ -61,6 +58,12 @@ if( load_prereqs==TRUE ){
 # process_docker_outputs <- function(list_file, my_dataype="FPKM", paths_file="stuti_results.done_11-10-15", load_prereqs=FALSE){ 
 combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", load_prereqs=FALSE, debug=TRUE){
 
+    # option to load prereqs
+    if( load_prereqs==TRUE ){
+        source("~/git/install_r_prereqs.r")
+        install_r_prereqs()
+    }
+    
     my_ids <- readIDs(paths_file)  
 
     # names for log and output
