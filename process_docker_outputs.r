@@ -17,8 +17,8 @@
 ############################################################################################################################
 
 #process_docker_outputs <- function(list_file, my_dataype="FPKM", paths_file="stuti_results.done_11-10-15", load_prereqs=FALSE){ 
-combine_docker_outputs <- function(list_file, my_dataype="FPKM", paths_file="test_list", load_prereqs=FALSE){ 
-    
+combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", load_prereqs=FALSE){
+
   my_ids <- readIDs(paths_file)  
   
   if( load_prereqs==TRUE ){
