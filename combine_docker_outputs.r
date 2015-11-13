@@ -90,19 +90,19 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
             ### shell version of check:
             ### for i in `cat stuti_results.done_11-10-15`; do if [ -f ".$i" ];then echo ".$i exists"; fi; done
 
-            if(debug==TRUE){print(paste("made it here (0.1)"))}
+            if(debug==TRUE){print(paste("made it here (0.2)"))}
             
             my_data_temp <- import_metadata(paste(".", my_ids[i], sep=""))
             
             if(debug==TRUE){print(paste(".", my_ids[i], sep=""))}
 
-            if(debug==TRUE){print(paste("made it here (0.2)"))}
+            if(debug==TRUE){print(paste("made it here (0.3)"))}
             
             # Add name of current file to the colnames vector
             split_path_string <- unlist(strsplit(my_ids[i], split="/"))
             my_data_name <- split_path_string[2]
 
-            if(debug==TRUE){print(paste("made it here (0.3)"))}
+            if(debug==TRUE){print(paste("made it here (0.4)"))}
             my_rownames <- row.names(my_data_temp) # NOT HUMAN READABLE
             # my_rownames <- my_data_temp[,"gene_short_name"] # NOT UNIQUE
             # COMPROMISE - UNIQUE AND CAN GET READABLE NAME EASILY
@@ -111,7 +111,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
                 unique_rownames <- c(unique_rownames, paste(my_data_temp[j,"gene_short_name"], "_", my_rownames[j], sep=""))
             }
 
-            if(debug==TRUE){print(paste("made it here (0.4)"))}
+            if(debug==TRUE){print(paste("made it here (0.5)"))}
             # replace original rownames with concatenated ones   
             row.names(my_data_temp) <- unique_rownames
     

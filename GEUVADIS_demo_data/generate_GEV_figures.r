@@ -119,17 +119,30 @@ heatmap_dendrogram(file_in=performer_stats_subselected, metadata_table=FPKM_meta
 
 # Create table from docker outputs
 
-# (3.a) Place name of the list file in a variable
+# (3.a) Move to the directory that contains the output directories produced by Stuti's Docker tool:
+setwd("/opt/gdc/")
+
+# (3.b) Place name of the list file in a variable
 paths_list = "~/git/CDIS_GEUVADIS_analysis/GEUVADIS_demo_data/test_paths_list.txt" # each path is the path to an output directory produced from Stuti's docker -
                                                                                    # this list references the 4 example outputs in /opt/gdc/ on the 202.169.169.33 VM
-# (3.b) Source two functions from this repository
+# (3.c) Source two functions from this repository
 # source scripts from this repository
 source("~/git/CDIS_GEUVADIS_analysis/readIDs.r")
-source("~/git/CDIS_GEUVADIS_analysis/process_docker_outputs.r")
+source("~/git/CDIS_GEUVADIS_analysis/combine_docker_outputs.r")
 
-# (3.c) Run the function that will combine the outputs
-# Combine the FPKM values from all samples listed in the paths_list file (creates file formatted like combined_FPKM.txt, with just the 4 samples in the list)
+# (3.d) Combine the FPKM values from all samples listed in the paths_list file (creates file formatted like combined_FPKM.txt, with just the 4 samples in the list)
 # EXAMPLES TO RECREATE RESULTS - in this case, a subset of the results, 4/41 samples with results on your VM:
 combine_docker_outputs(paths_file=paths_list, my_dataype="FPKM", output_prefix="my_data")
 # NOTES:
-#
+# assume that you start in 
+#   /PATH/
+# and that all of the file paths follow this pattern:
+#   /PATH/ERRXXXXXX/star_2_pass/genes.fpkm_tracking
+# XXXXXX is unique, thes rest is not so use the ERR portion of the path to name the data
+# and that the ids file looks like this
+#   /ERR1234/star_2_pass/genes.fpkm_tracking
+#   /ERR5678/star_2_pass/genes.fpkm_tracking
+
+
+combine_docker_outputs(paths_file=paths_list, my_dataype="FPKM", output_prefix="my_data", debug=TRUE)
+
