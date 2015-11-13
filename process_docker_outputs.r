@@ -56,7 +56,7 @@
 
 
 # process_docker_outputs <- function(list_file, my_dataype="FPKM", paths_file="stuti_results.done_11-10-15", load_prereqs=FALSE){ 
-combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", load_prereqs=FALSE, debug=TRUE){
+combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", load_prereqs=FALSE, debug=FALSE){
 
     # option to load prereqs
     if( load_prereqs==TRUE ){
@@ -68,7 +68,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
     
     # names for log and output
     log_file <- paste("R_compile.", my_dataype, ".log.txt", sep="")
-    output_name <- paste("combined_", my_dataype, ".txt", sep ="")
+    output_name <- paste(output_prefix, ".combined_", my_dataype, ".txt", sep ="")
 
     # import list of ids
     # my_ids <- readIDs("stuti_results.done_11-10-15")
@@ -173,46 +173,10 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", lo
 }
 
 
-############################################################################################################################
-############################################################################################################################
-### PERFORM ANALYSES
-############################################################################################################################
-############################################################################################################################
-#analyze_combined_output <- function(data_file="", metadata_file=""){
 
-# combined_FPKM_metadata.txt
-# combined_FPKM.txt
-
-  # import the data table
-  #import_data(file_name="combined_FPKM.txt")
-
-  setwd("/Users/kevin/Documents/Projects/Geuvadis_data/genes_fpkm_files.11-11-15/my_data")
-
-  # norm & look at pre and post normalization distributios (select appropriate stat test for later)
-  preprocessing_tool(data_in="combined_FPKM.txt", norm_method="quantile", produce_boxplots=TRUE)
-
-  # raw PCoA
-  plot_pco(file_in="")
-
-  # render PCoA with metadata (population and lab) (all data)
-  render_calcualted_pcoa(PCoA_in="")
-  
-  render_calcualted_pcoa(PCoA_in="", metadata_table="combined_FPKM_metadata.txt", use_all_metadata_columns=TRUE)
   
   
   
-  # heatmap dendrogram (all data)
-  heatmap_dendrogram(file_in="", metadata_table="combined_FPKM_metadata.txt", metadata_column=1)
-  
-  # statistical test
-  calc_stats(data_table="", metadata_table="combined_FPKM_metadata.txt", metadata_column=1, stat_test="Kruskal-Wallis") # ANOVA-one-way
-  # more for subselection for matR Google group
   
   
-  # viz from stat subselecteddata
   
-  
-#}
-
-############################################################################################################################
-############################################################################################################################
