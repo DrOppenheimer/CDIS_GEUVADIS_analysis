@@ -56,7 +56,7 @@
 
 
 # process_docker_outputs <- function(list_file, my_dataype="FPKM", paths_file="stuti_results.done_11-10-15", load_prereqs=FALSE){ 
-combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", load_prereqs=FALSE, debug=FALSE){
+combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", output_prefix="my_data", load_prereqs=FALSE, debug=FALSE){
 
     # option to load prereqs
     if( load_prereqs==TRUE ){
