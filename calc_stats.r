@@ -15,11 +15,6 @@ calc_stats <<- function(
   
   require(matR)
 
-  # create name for the output file
-  if ( identical(file_out, "default") ){
-    file_out = paste(data_table, ".", stat_test, ".STATS_RESULTS.txt", sep="", collapse="")
-  }
-  
   # read in the abundance data
   if( identical(input_type,"file") ){
     data_matrix <- data.matrix(read.table(
@@ -122,10 +117,17 @@ calc_stats <<- function(
     }
   }
 
-# order the data by the selected column - placing ordered data in a new object
+  # order the data by the selected column - placing ordered data in a new object
   my_stats.summary.ordered <- my_stats.summary[ order(my_stats.summary[,order_by], decreasing=order_decreasing), ]
 
-# flat file output of the summary file
+
+  
+  # create name for the output file
+  if ( identical(file_out, "default") ){
+      file_out = paste(data_table, ".", stat_test, ".", colnames(metadata_matrix)[metadata_column], ".STATS_RESULTS.txt", sep="", collapse="")
+  }
+  
+  # flat file output of the summary file
   write.table(my_stats.summary.ordered, file = file_out, col.names=NA, sep="\t", quote=FALSE)
   
  }
