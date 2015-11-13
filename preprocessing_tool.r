@@ -17,7 +17,7 @@ preprocessing_tool <- function(
                                   DESeq_fitType         = "local",          # c( "parametric", "local" )
                                   DESeq_image           = TRUE, # create dispersion vs mean plot indicate DESeq regression
                                   scale_0_to_1          = TRUE,
-                                        = FALSE,
+                                  produce_boxplots      = FALSE,
                                   boxplots_file_out     = "default",
                                   boxplot_height_in     = "default", # 11,
                                   boxplot_width_in      = "default", #"8.5,
@@ -168,9 +168,9 @@ quickly"
     if ( produce_boxplots==TRUE ) {
     
       if( identical(boxplots_file_out, "default") ){
-          boxplots_file <- paste(input_name, ".boxplots.png", "\n", sep="", collapse="")
+          boxplots_file <- paste(input_name, ".boxplots.png", sep="", collapse="")
       }else{
-        boxplots_file <- boxplots_file_out
+          boxplots_file <- boxplots_file_out
       }
       
       if( identical(boxplot_height_in, "default") ){ boxplot_height_in <- 8.5 }
