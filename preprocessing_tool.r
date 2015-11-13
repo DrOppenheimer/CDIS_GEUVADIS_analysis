@@ -168,7 +168,8 @@ quickly"
     if ( produce_boxplots==TRUE ) {
     
       if( identical(boxplots_file_out, "default") ){
-        boxplots_file <- paste(input_name, ".boxplots.png", "\n", sep="", collapse="")
+          boxplots_file <- paste(input_name, ".boxplots.png", "\n", sep="", collapse="")
+          gsub("?", "", boxplots_file) # not surre why, but above sometimes appends filename with a "?" - this is a hacky fix 11-13-15
       }else{
         boxplots_file <- boxplots_file_out
       }
