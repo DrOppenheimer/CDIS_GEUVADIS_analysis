@@ -169,7 +169,7 @@ quickly"
     
       if( identical(boxplots_file_out, "default") ){
           boxplots_file <- paste(input_name, ".boxplots.png", "\n", sep="", collapse="")
-          gsub("?", "", boxplots_file) # not surre why, but above sometimes appends filename with a "?" - this is a hacky fix 11-13-15
+          #gsub("?", "", boxplots_file) # not surre why, but above sometimes appends filename with a "?" - this is a hacky fix 11-13-15
       }else{
         boxplots_file <- boxplots_file_out
       }
@@ -192,6 +192,10 @@ quickly"
       screen(2)
       graphics::boxplot(input_data, main=(paste(input_name," PREPROCESSED (", norm_method, " norm)", sep="", collapse="")),las=2, cex.axis=0.5)
       dev.off()
+      # debug "?" appended to boxplot filenames - hacky fix
+      appended_boxplots_file = paste(boxplots_file, "?", sep="")
+      if( file.exists(appended_boxplots_file) ){ file.rename(appended_boxplots_file, boxplots_file) }
+      
       boxplot_message <- paste("output boxplot:       ", boxplots_file, "\n", sep="", collapse="")
     }
 
