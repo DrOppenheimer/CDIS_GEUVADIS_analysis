@@ -1,4 +1,4 @@
-/opt/gdc/ERR188022
-/opt/gdc/ERR188023
-/opt/gdc/ERR188024
-/opt/gdc/ERR188025
+/ERR188022/star_2_pass/genes.fpkm_tracking
+/ERR188023/star_2_pass/genes.fpkm_tracking
+/ERR188024/star_2_pass/genes.fpkm_tracking
+/ERR188025/star_2_pass/genes.fpkm_tracking
