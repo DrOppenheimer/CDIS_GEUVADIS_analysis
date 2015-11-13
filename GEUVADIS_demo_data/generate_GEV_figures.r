@@ -142,7 +142,4 @@ combine_docker_outputs(paths_file=paths_list, my_dataype="FPKM", output_prefix="
 # and that the ids file looks like this
 #   /ERR1234/star_2_pass/genes.fpkm_tracking
 #   /ERR5678/star_2_pass/genes.fpkm_tracking
-
-
-combine_docker_outputs(paths_file=paths_list, my_dataype="FPKM", output_prefix="my_data", debug=TRUE)
-
+# This script will produce two files, a table that contains the FPKM abundance profiles for each sample, and a simple log
