@@ -1,7 +1,7 @@
 # CDIS_GEUVADIS_analysis
 R scripts for analysis of GEUVADIS created BAMs
 
-Start by reading the combine_docker_outputs.README file in the
+Start by reading the generate_GEV_figures.README file in the
 GEUVADIS_demo_data folder.
 It contains all the instructions you should need
 
@@ -11,7 +11,7 @@ This file has all of the documentation to:
 
 As of 11-13-2015
 I cloned this repository into the VM that Felix set up ( into ~/git/ )
-and was able to reproduce all steps in combine_docker_outputs.README.
+and was able to reproduce all steps in generate_GEV_figures.README.
 
 I have also included an updated version of the slides in the ./slides
 directory
