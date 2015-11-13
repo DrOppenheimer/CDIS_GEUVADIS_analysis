@@ -191,10 +191,6 @@ quickly"
       screen(2)
       graphics::boxplot(input_data, main=(paste(input_name," PREPROCESSED (", norm_method, " norm)", sep="", collapse="")),las=2, cex.axis=0.5)
       dev.off()
-      # debug "?" appended to boxplot filenames - hacky fix
-      appended_boxplots_file = paste(boxplots_file, "?", sep="")
-      if( file.exists(appended_boxplots_file) ){ file.rename(appended_boxplots_file, boxplots_file) }
-      
       boxplot_message <- paste("output boxplot:       ", boxplots_file, "\n", sep="", collapse="")
     }
 

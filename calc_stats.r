@@ -17,7 +17,7 @@ calc_stats <<- function(
 
   # create name for the output file
   if ( identical(file_out, "default") ){
-    file_out = paste(data_table, ".STATS_RESULTS.txt", sep="", collapse="")
+    file_out = paste(data_table, ".", stat_test, ".STATS_RESULTS.txt", sep="", collapse="")
   }
   
   # read in the abundance data
