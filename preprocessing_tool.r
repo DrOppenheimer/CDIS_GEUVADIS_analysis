@@ -17,7 +17,7 @@ preprocessing_tool <- function(
                                   DESeq_fitType         = "local",          # c( "parametric", "local" )
                                   DESeq_image           = TRUE, # create dispersion vs mean plot indicate DESeq regression
                                   scale_0_to_1          = TRUE,
-                                  produce_boxplots      = FALSE,
+                                        = FALSE,
                                   boxplots_file_out     = "default",
                                   boxplot_height_in     = "default", # 11,
                                   boxplot_width_in      = "default", #"8.5,
@@ -169,7 +169,6 @@ quickly"
     
       if( identical(boxplots_file_out, "default") ){
           boxplots_file <- paste(input_name, ".boxplots.png", "\n", sep="", collapse="")
-          #gsub("?", "", boxplots_file) # not surre why, but above sometimes appends filename with a "?" - this is a hacky fix 11-13-15
       }else{
         boxplots_file <- boxplots_file_out
       }
