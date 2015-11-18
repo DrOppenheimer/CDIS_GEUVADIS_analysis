@@ -1,6 +1,6 @@
 #setwd("~/Documents/Projects/import_metadata/")
 
-import_metadata <- function(group_table, group_column, sample_names){
+import_metadata <- function(group_table){ #, group_column, sample_names){
     metadata_matrix <- as.matrix( # Load the metadata table (same if you use one or all columns)
         read.table(
             file=group_table,row.names=1,header=TRUE,sep="\t",
