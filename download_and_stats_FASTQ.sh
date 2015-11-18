@@ -58,9 +58,9 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    echo "NA"\t$pair_name\t$md5_tar\t$size_tar >> $my_tar_log; # tar created from mate_1 and mate_2
    # Run Stuti's tool
    ## populate the filenames_1.txt file with a single jobname
-   cat >filenames_1.txt<<EOF
-   $pair_name.fastq.tar.gz
-   EOF
+cat >filenames_1.txt<<EOF
+$pair_name.fastq.tar.gz
+EOF
    ## run load and run the docker tool
    sudo su;
    docker load -i /mnt/star_cuff_docker_1.8.tar;
@@ -78,4 +78,4 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    cp $my_fastq_log $my_save_dir/;
    cp $my_tar_log $my_save_dir/;
    cp $my_error_log $my_save_dir/;
-done
+done;
