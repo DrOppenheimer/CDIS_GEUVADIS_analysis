@@ -23,8 +23,8 @@ my_save_dir="/mnt/saved_docker_outputs/";
 # url_mate_1:url_mate_2
 
 # write header for logs
-echo "original_url\tbasename\tmd5\tsize" > $my_fastq_log;
-echo "original_url\tbasename\tmd5\tsize" > $my_tar_log;
+echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_fastq_log;
+echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_tar_log;
 echo "### Run log for processing of $my_list ###" > $my_run_log
 echo "### Error log for processing of $my_list ###" > $my_error_log;
 echo "save_dir:        $my_save_dir"       >> $my_run_log;
@@ -63,30 +63,30 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
 
    # create tar from individual mates
    echo "creating tar $tar_name" >> $my_run_log;
-   tar -zcvf $tar_name $mate_1_basename $mate_2_basename 2 >> $my_error_log 1 >> $my_run_log;
+   tar -zcf $tar_name $mate_1_basename $mate_2_basename 2 >> $my_error_log 1 >> $my_run_log;
    echo "DONE creating tar $tar_name" >> $my_run_log;
 
    # get md5s
    echo "calculating md5's" >> $my_run_log;
-   md5_mate1=`md5sum $mate_1_basename` 2>> $my_error_log 1 >> $my_run_log;
-   md5_mate2=`md5sum $mate_2_basename` 2>> $my_error_log 1 >> $my_run_log;
-   md5_tar=`md5sum $tar_name` 2>> $my_error_log 1 >> $my_run_log;
+   md5_mate1=`md5sum $mate_1_basename | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
+   md5_mate2=`md5sum $mate_2_basename | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
+   md5_tar=`md5sum $tar_name | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
    echo "DONE calculating md5's" >> $my_run_log;
    
    # get sizes
    echo "calculating sizes" >> $my_run_log;
-   size_mate1=`stat -c%s $mate_1_basename` 2>> $my_error_log 1 >> $my_run_log;
-   size_mate2=`stat -c%s $mate_2_basename` 2>> $my_error_log 1 >> $my_run_log;
-   size_tar=`stat -c%s $tar_name` 2>> $my_error_log 1 >> $my_run_log;
+   size_mate1=`stat -c%s $mate_1_basename`; # 2>> $my_error_log 1 >> $my_run_log;
+   size_mate2=`stat -c%s $mate_2_basename`; # 2>> $my_error_log 1 >> $my_run_log;
+   size_tar=`stat -c%s $tar_name`; # 2>> $my_error_log 1 >> $my_run_log;
    echo "DONE calculating sizes" >> $my_run_log;
    
    # print values to logs
    echo "printing calculated values to logs" >> $my_run_log;
-   echo $mate_1\t$mate_1_basename\t$md5_mate1\t$size_mate1 >> $my_fastq_log; # mate_1 FASTQ;
+   echo $mate_1_basename\t$mate_1\t$mate_1_basename\t$md5_mate1\t$size_mate1 >> $my_fastq_log; # mate_1 FASTQ;
    echo "FASTQ stats of $mate_1_basename complete" >> $my_run_log;
-   echo $mate_2\t$mate_2_basename\t$md5_mate2\t$size_mate2 >> $my_fastq_log; # mate_2 FASTQ;
+   echo $mate_2_basename\t$mate_2\t$mate_2_basename\t$md5_mate2\t$size_mate2 >> $my_fastq_log; # mate_2 FASTQ;
    echo "FASTQ stats of $mate_2_basename complete" >> $my_run_log;
-   echo "NA"\t$pair_name\t$md5_tar\t$size_tar >> $my_tar_log; # tar created from mate_1 and mate_2
+   echo $tar_name\t"NA"\t$pair_name\t$md5_tar\t$size_tar >> $my_tar_log; # tar created from mate_1 and mate_2
    echo "FASTQ stats of $tar_name complete" >> $my_run_log;
    echo "DONE printing calculated values to logs" >> $my_run_log;
    
