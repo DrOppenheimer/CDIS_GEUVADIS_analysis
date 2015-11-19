@@ -74,11 +74,13 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    echo "DONE calculating md5's" >> $my_run_log;
    
    # get sizes
+   echo "STAT THING"
    echo "calculating sizes" >> $my_run_log;
    size_mate1=`stat -c%s $mate_1_basename`; # 2>> $my_error_log 1 >> $my_run_log;
    size_mate2=`stat -c%s $mate_2_basename`; # 2>> $my_error_log 1 >> $my_run_log;
    size_tar=`stat -c%s $tar_name`; # 2>> $my_error_log 1 >> $my_run_log;
    echo "DONE calculating sizes" >> $my_run_log;
+   echo "STAT THING DONE"
    
    # print values to logs
    echo "printing calculated values to logs" >> $my_run_log;
