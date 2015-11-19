@@ -23,10 +23,10 @@ my_save_dir="/mnt/saved_docker_outputs/";
 # url_mate_1:url_mate_2
 
 # write header for logs
-echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_fastq_log;
-echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_tar_log;
-echo "### Run log for processing of $my_list ###" > $my_run_log
-echo "### Error log for processing of $my_list ###" > $my_error_log;
+echo "file_name\toriginal_url\tbasename\tmd5\tsize\n" > $my_fastq_log;
+echo "file_name\toriginal_url\tbasename\tmd5\tsize\n" > $my_tar_log;
+echo "### Run log for processing of $my_list ###\n" > $my_run_log
+echo "### Error log for processing of $my_list ###\n" > $my_error_log;
 echo "save_dir:        $my_save_dir"       >> $my_run_log;
 
 # create a directory for the outputs
@@ -125,7 +125,7 @@ EOF
    cp $my_run_log $my_save_dir/;
    echo "Done copying logs" >> $my_run_log;
    
-   echo "ALL DONE WITH  $pair_name" >> $my_run_log;
+   echo "ALL DONE WITH  $pair_name\n" >> $my_run_log;
    
 done;
 
