@@ -11,9 +11,9 @@
 
 # variables
 my_list="";
-my_fastq_log="$my_list.FASTQ_log.txt";
-my_tar_log="$my_list.tar_log.txt";
-my_error_log="$my_list.error_log.txt";
+my_fastq_log=$my_list.FASTQ_log.txt;
+my_tar_log=$my_list.tar_log.txt;
+my_error_log=$my_list.error_log.txt;
 my_save_dir="/mnt/saved_docker_outputs/";
 
 # expects list to be in this format
@@ -23,6 +23,7 @@ my_save_dir="/mnt/saved_docker_outputs/";
 echo "original_url\tbasename\tmd5\tsize" > $my_fastq_log;
 echo "original_url\tbasename\tmd5\tsize" > $my_tar_log;
 echo "### Error log for processing of $my_list ###" > $my_error_log;
+echo "save_dir:          $my_save_dir"       >> $my_error_log;
 
 # create a directory for the outputs
 
