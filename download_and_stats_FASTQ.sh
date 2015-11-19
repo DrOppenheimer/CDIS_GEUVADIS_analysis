@@ -38,13 +38,13 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    mate_1_basename=`basename $mate_1`;
    mate_2_basename=`basename $mate_2`;
    pair_name=`echo $mate_1_basename | cut -f 1 -d "_"`;
-   tar_name= $pair_name.fastq.tar.gz;
+   tar_name=$pair_name.fastq.tar.gz;
    echo "processing:      $pair_name"       >> $my_error_log;
    echo "pair_name:       $pair_name"       >> $my_error_log;
    echo "mate_1:          $mate_1"          >> $my_error_log;
    echo "mate_1_basename: $mate_1_basename" >> $my_error_log;
    echo "mate_2:          $mate_2"          >> $my_error_log;
-   echo "mate_1_basename: $mate_1_basename" >> $my_error_log;
+   echo "mate_1_basename: $mate_2_basename" >> $my_error_log;
    echo "tar_name:        $tar_name"        >> $my_error_log;
    # download both members of the mate pair
    echo "downloading $mate_1 and $mate_2" >> $my_error_log;
