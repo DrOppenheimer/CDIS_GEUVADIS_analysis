@@ -56,10 +56,10 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    # download both members of the mate pair
    echo "downloading $mate_1" >> $my_run_log;
    wget $mate_1 2 >> $my_error_log 1 >> $my_run_log;
-   echo "DONE downloading $mate_1 complete" >> $my_run_log;
+   echo "DONE downloading $mate_1" >> $my_run_log;
    echo "downloading $mate_2" >> $my_run_log;
    wget $mate_2 2 >> $my_error_log 1 >> $my_run_log;
-   echo "DONE downloading $mate_2 complete" >> $my_run_log;
+   echo "DONE downloading $mate_2" >> $my_run_log;
 
    # create tar from individual mates
    echo "creating tar $tar_name" >> $my_run_log;
@@ -74,13 +74,11 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    echo "DONE calculating md5's" >> $my_run_log;
    
    # get sizes
-   echo 1 > "???"
    echo "calculating sizes" >> $my_run_log;
    size_mate1=`stat -c%s $mate_1_basename`; # 2>> $my_error_log 1 >> $my_run_log;
    size_mate2=`stat -c%s $mate_2_basename`; # 2>> $my_error_log 1 >> $my_run_log;
    size_tar=`stat -c%s $tar_name`; # 2>> $my_error_log 1 >> $my_run_log;
    echo "DONE calculating sizes" >> $my_run_log;
-   echo 1 > "???"
    
    # print values to logs
    echo "printing calculated values to logs" >> $my_run_log;
