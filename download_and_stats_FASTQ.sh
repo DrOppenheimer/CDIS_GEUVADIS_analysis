@@ -37,7 +37,7 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    mate_1_basename=`basename $mate_1`;
    mate_2_basename=`basename $mate_2`;
    pair_name=`echo $mate_1_basename | cut -f 1 -d "_"`;
-   tar_name=`$pair_name.fastq.tar.gz`;
+   tar_name= $pair_name.fastq.tar.gz;
    echo "processing:      $pair_name"       >> $my_error_log;
    echo "pair_name:       $pair_name"       >> $my_error_log;
    echo "mate_1:          $mate_1"          >> $my_error_log;
