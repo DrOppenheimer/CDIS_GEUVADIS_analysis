@@ -10,10 +10,10 @@
 # R script combine_docker_outputs.r
 
 # variables
-my_list="test_list.txt";
-my_fastq_log="my_log.txt";
-my_tar_log="my_tar_log.txt";
-my_error_log="error_log.txt";
+my_list=".txt";
+my_fastq_log=".FASTQ_log.txt";
+my_tar_log=".tar_log.txt";
+my_error_log=".error_log.txt";
 my_save_dir="/mnt/saved_docker_outputs/";
 
 # expects list to be in this format
