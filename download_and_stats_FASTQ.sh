@@ -1,7 +1,7 @@
 #!/bin/bash
 ####!/bin/bash -ex
 
-# bash -x foo.sh > file.log 2>&1
+# bash -x download_and_stats_FASTQ.sh > debug.log 2>&1
 
 # This is a script that will
 # downnload the two FASTQ for a mate pair
@@ -23,10 +23,14 @@ my_save_dir="/mnt/saved_docker_outputs/";
 # url_mate_1:url_mate_2
 
 # write header for logs
-echo "file_name\toriginal_url\tbasename\tmd5\tsize\n" > $my_fastq_log;
-echo "file_name\toriginal_url\tbasename\tmd5\tsize\n" > $my_tar_log;
-echo "### Run log for processing of $my_list ###\n" > $my_run_log
-echo "### Error log for processing of $my_list ###\n" > $my_error_log;
+echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_fastq_log;
+echo "" >> $my_fastq_log;
+echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_tar_log;
+echo "" >> $my_tar_log;
+echo "### Run log for processing of $my_list ###" > $my_run_log
+echo "" >> $my_run_log
+echo "### Error log for processing of $my_list ###" > $my_error_log;
+echo "" >> $my_error_log;
 echo "save_dir:        $my_save_dir"       >> $my_run_log;
 
 # create a directory for the outputs
@@ -55,10 +59,10 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
 
    # download both members of the mate pair
    echo "downloading $mate_1" >> $my_run_log;
-   wget $mate_1 2 >> $my_error_log 1 >> $my_run_log;
+#   wget $mate_1 2 >> $my_error_log 1 >> $my_run_log;
    echo "DONE downloading $mate_1" >> $my_run_log;
    echo "downloading $mate_2" >> $my_run_log;
-   wget $mate_2 2 >> $my_error_log 1 >> $my_run_log;
+#   wget $mate_2 2 >> $my_error_log 1 >> $my_run_log;
    echo "DONE downloading $mate_2" >> $my_run_log;
 
    # create tar from individual mates
@@ -74,13 +78,11 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    echo "DONE calculating md5's" >> $my_run_log;
    
    # get sizes
-   #echo "STAT THING"
    echo "calculating sizes" >> $my_run_log;
    size_mate1=`stat -c%s $mate_1_basename`; # 2>> $my_error_log 1 >> $my_run_log;
    size_mate2=`stat -c%s $mate_2_basename`; # 2>> $my_error_log 1 >> $my_run_log;
    size_tar=`stat -c%s $tar_name`; # 2>> $my_error_log 1 >> $my_run_log;
    echo "DONE calculating sizes" >> $my_run_log;
-   #echo "STAT THING DONE"
    
    # print values to logs
    echo "printing calculated values to logs" >> $my_run_log;
@@ -99,24 +101,24 @@ $pair_name.fastq.tar.gz
 EOF
    ## run load and run the docker tool
    echo "running the Docker..." >> $my_run_log;
-   sudo su;
-   docker load -i /mnt/star_cuff_docker_1.8.tar;
-   python run_docker.py;
-   sudo -k;
+#   sudo su;
+#   docker load -i /mnt/star_cuff_docker_1.8.tar;
+#   python run_docker.py;
+#   sudo -k;
    echo "DONE with Docker processing" >> $my_run_log;
    # get the output
    echo "saving Docker output" >> $my_run_log;
    ## mkdir for output that my R script can use to combine outputs later
    mkdir -p $my_save_dir$pair_name/star_2_pass/;
    ## move the genes.fpkm_tracking file to the save location
-   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/;
+#   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/;
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup
    echo "cleanup" >> $my_run_log;
-   sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
-   sudo rm $mate_1_basename;
-   sudo rm $mate_2_basename;
+#   sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
+#   sudo rm $mate_1_basename;
+#   sudo rm $mate_2_basename;
    echo "Done with cleanup" >> $my_run_log;
 
    # copy current logs to the output directory
@@ -127,9 +129,11 @@ EOF
    cp $my_run_log $my_save_dir/;
    echo "Done copying logs" >> $my_run_log;
    
-   echo "ALL DONE WITH  $pair_name\n" >> $my_run_log;
+   echo "ALL DONE WITH  $pair_name" >> $my_run_log;
+   echo "" >> $my_run_log;
    
 done;
 
-echo " ALL DONE PROCESSING $my_list" >> $my_run_log
+echo "" >> $my_run_log
+echo "ALL DONE PROCESSING $my_list" >> $my_run_log
 
