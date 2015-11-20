@@ -67,7 +67,7 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
 
    # create tar from individual mates
    echo "creating tar $tar_name" >> $my_run_log;
-   tar -zcf $tar_name $mate_1_basename $mate_2_basename 2 >> $my_error_log 1 >> $my_run_log;
+   tar -zcf $tar_name $mate_1_basename $mate_2_basename;
    echo "DONE creating tar $tar_name" >> $my_run_log;
 
    # get md5s
