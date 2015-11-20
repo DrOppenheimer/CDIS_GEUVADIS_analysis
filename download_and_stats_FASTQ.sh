@@ -87,11 +87,11 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    # print values to logs
    echo "printing calculated values to logs" >> $my_run_log;
    echo $mate_1_basename\t$mate_1\t$mate_1_basename\t$md5_mate1\t$size_mate1 >> $my_fastq_log; # mate_1 FASTQ;
-   echo "FASTQ stats of $mate_1_basename complete" >> $my_run_log;
+   echo "DONE printing stats of $mate_1_base" >> $my_run_log;
    echo $mate_2_basename\t$mate_2\t$mate_2_basename\t$md5_mate2\t$size_mate2 >> $my_fastq_log; # mate_2 FASTQ;
-   echo "FASTQ stats of $mate_2_basename complete" >> $my_run_log;
+   echo "DONE printing stats of $mate_2_basename" >> $my_run_log;
    echo $tar_name\t"NA"\t$pair_name\t$md5_tar\t$size_tar >> $my_tar_log; # tar created from mate_1 and mate_2
-   echo "FASTQ stats of $tar_name complete" >> $my_run_log;
+   echo "DONE printing stats of $tar_name" >> $my_run_log;
    echo "DONE printing calculated values to logs" >> $my_run_log;
    
    # Run Stuti's tool
