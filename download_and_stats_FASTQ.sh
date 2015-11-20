@@ -1,7 +1,7 @@
 #!/bin/bash
 ####!/bin/bash -ex
 
-# bash -x download_and_stats_FASTQ.sh > debug.log 2>&1
+# bash -x download_and_stats_FASTQ.sh > debug.log 2>&1 # run like this for verbose debugging
 
 # This is a script that will
 # downnload the two FASTQ for a mate pair
