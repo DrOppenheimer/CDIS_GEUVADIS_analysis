@@ -59,10 +59,10 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
 
    # download both members of the mate pair
    echo "downloading $mate_1" >> $my_run_log;
-#   wget $mate_1 2 >> $my_error_log 1 >> $my_run_log;
+   wget $mate_1 2 >> $my_error_log 1 >> $my_run_log;
    echo "DONE downloading $mate_1" >> $my_run_log;
    echo "downloading $mate_2" >> $my_run_log;
-#   wget $mate_2 2 >> $my_error_log 1 >> $my_run_log;
+   wget $mate_2 2 >> $my_error_log 1 >> $my_run_log;
    echo "DONE downloading $mate_2" >> $my_run_log;
 
    # create tar from individual mates
@@ -101,24 +101,24 @@ $pair_name.fastq.tar.gz
 EOF
    ## run load and run the docker tool
    echo "running the Docker..." >> $my_run_log;
-#   sudo su;
-#   docker load -i /mnt/star_cuff_docker_1.8.tar;
-#   python run_docker.py;
-#   sudo -k;
+   sudo su;
+   docker load -i /mnt/star_cuff_docker_1.8.tar;
+   python run_docker.py;
+   sudo -k;
    echo "DONE with Docker processing" >> $my_run_log;
    # get the output
    echo "saving Docker output" >> $my_run_log;
    ## mkdir for output that my R script can use to combine outputs later
    mkdir -p $my_save_dir$pair_name/star_2_pass/;
    ## move the genes.fpkm_tracking file to the save location
-#   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/;
+   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/;
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup
    echo "cleanup" >> $my_run_log;
-#   sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
-#   sudo rm $mate_1_basename;
-#   sudo rm $mate_2_basename;
+   sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
+   sudo rm $mate_1_basename;
+   sudo rm $mate_2_basename;
    echo "Done with cleanup" >> $my_run_log;
 
    # copy current logs to the output directory
