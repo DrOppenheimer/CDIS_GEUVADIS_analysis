@@ -60,10 +60,11 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
 
    # download both members of the mate pair
    echo "downloading $mate_1" >> $my_run_log;
-   wget $mate_1 2 >> $my_error_log 1 >> $my_run_log;
+   #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
+   wget $mate_1
    echo "DONE downloading $mate_1" >> $my_run_log;
    echo "downloading $mate_2" >> $my_run_log;
-   wget $mate_2 2 >> $my_error_log 1 >> $my_run_log;
+   wget $mate_2
    echo "DONE downloading $mate_2" >> $my_run_log;
 
    # create tar from individual mates
