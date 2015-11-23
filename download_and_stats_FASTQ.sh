@@ -101,10 +101,13 @@ $pair_name.fastq.tar.gz
 EOF
    ## run load and run the docker tool
    echo "running the Docker..." >> $my_run_log;
+
+   # start sudo su
    sudo su;
+
    docker load -i /mnt/star_cuff_docker_1.8.tar;
    python run_docker.py;
-   sudo -k;
+   #sudo -k;
    echo "DONE with Docker processing" >> $my_run_log;
    # get the output
    echo "saving Docker output" >> $my_run_log;
@@ -131,6 +134,9 @@ EOF
    
    echo "ALL DONE WITH  $pair_name" >> $my_run_log;
    sudo echo "" >> $my_run_log;
+
+   # close sudo su
+   sudo -k;
    
 done;
 
