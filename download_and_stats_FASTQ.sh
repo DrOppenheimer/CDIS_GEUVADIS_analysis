@@ -12,7 +12,8 @@
 # R script combine_docker_outputs.r
 
 # variables
-my_list="";
+#my_list="";
+my_list="err_list_1_of_4.11-18-15.txt.test"; # list with two samples for testing (4 FASTQ)
 my_fastq_log=$my_list.FASTQ_log.txt;
 my_tar_log=$my_list.tar_log.txt;
 my_run_log=$my_list.run_log.txt;
