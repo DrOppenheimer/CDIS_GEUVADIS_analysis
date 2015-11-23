@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 
 docker_id = "0ede86ece3ce"
