@@ -109,7 +109,7 @@ EOF
    # get the output
    echo "saving Docker output" >> $my_run_log;
    ## mkdir for output that my R script can use to combine outputs later
-   mkdir -p $my_save_dir$pair_name/star_2_pass/;
+   sudo mkdir -p $my_save_dir$pair_name/star_2_pass/;
    ## move the genes.fpkm_tracking file to the save location
    sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/;
    echo "DONE saving Docker output" >> $my_run_log;
@@ -123,14 +123,14 @@ EOF
 
    # copy current logs to the output directory
    echo "copying logs" >> $my_run_log;
-   cp $my_fastq_log $my_save_dir/;
-   cp $my_tar_log $my_save_dir/;
-   cp $my_error_log $my_save_dir/;
-   cp $my_run_log $my_save_dir/;
+   sudo cp $my_fastq_log $my_save_dir/;
+   sudo cp $my_tar_log $my_save_dir/;
+   sudo cp $my_error_log $my_save_dir/;
+   sudo cp $my_run_log $my_save_dir/;
    echo "Done copying logs" >> $my_run_log;
    
    echo "ALL DONE WITH  $pair_name" >> $my_run_log;
-   echo "" >> $my_run_log;
+   sudo echo "" >> $my_run_log;
    
 done;
 
