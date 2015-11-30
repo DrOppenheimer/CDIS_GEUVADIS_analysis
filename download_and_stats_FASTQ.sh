@@ -104,44 +104,43 @@ EOF
    echo "running the Docker..." >> $my_run_log;
 
    # start sudo su
-   tmux;
-   sudo su;
-   docker load -i /mnt/star_cuff_docker_1.8.tar;
-   python run_docker.py;
+   # tmux;
+   # sudo su;
+   sduo docker load -i /mnt/star_cuff_docker_1.8.tar;
+   sudo python run_docker.py;
    #sudo -k;
    echo "DONE with Docker processing" >> $my_run_log;
    # get the output
    echo "saving Docker output" >> $my_run_log;
    ## mkdir for output that my R script can use to combine outputs later
-   mkdir -p $my_save_dir$pair_name/star_2_pass/;
+   sudo mkdir -p $my_save_dir$pair_name/star_2_pass/;
    ## move the genes.fpkm_tracking file to the save location
    echo "DOING THIS:" >> $my_run_log;
-   echo "cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/" >> $my_run_log;
-   cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/
+   echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/" >> $my_run_log;
+   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup
    echo "cleanup" >> $my_run_log;
-   rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
-   rm $mate_1_basename;
-   rm $mate_2_basename;
+   sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
+   sudo rm $mate_1_basename;
+   sudo rm $mate_2_basename;
    echo "Done with cleanup" >> $my_run_log;
 
    # copy current logs to the output directory
    echo "copying logs" >> $my_run_log;
-   cp $my_fastq_log $my_save_dir/;
-   cp $my_tar_log $my_save_dir/;
-   cp $my_error_log $my_save_dir/;
-   cp $my_run_log $my_save_dir/;
+   sudo cp $my_fastq_log $my_save_dir/;
+   sudo cp $my_tar_log $my_save_dir/;
+   sudo cp $my_error_log $my_save_dir/;
+   sudo cp $my_run_log $my_save_dir/;
    echo "Done copying logs" >> $my_run_log;
    
    echo "ALL DONE WITH  $pair_name" >> $my_run_log;
-   sudo echo "" >> $my_run_log;
 
    # close sudo su
-   sudo -k;
+   # sudo -k;
    # close tmux session
-   exit;
+   # exit;
    
 done;
 
