@@ -61,10 +61,10 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    # download both members of the mate pair
    echo "downloading $mate_1" >> $my_run_log;
    #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
-   wget $mate_1
+   wget $mate_1;
    echo "DONE downloading $mate_1" >> $my_run_log;
    echo "downloading $mate_2" >> $my_run_log;
-   wget $mate_2
+   wget $mate_2;
    echo "DONE downloading $mate_2" >> $my_run_log;
 
    # create tar from individual mates
@@ -93,7 +93,6 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    echo $mate_2_basename\t$mate_2\t$mate_2_basename\t$md5_mate2\t$size_mate2 >> $my_fastq_log; # mate_2 FASTQ;
    echo "DONE printing stats of $mate_2_basename" >> $my_run_log;
    echo $tar_name\t"NA"\t$pair_name\t$md5_tar\t$size_tar >> $my_tar_log; # tar created from mate_1 and mate_2
-   echo "DONE printing stats of $tar_name" >> $my_run_log;
    echo "DONE printing calculated values to logs" >> $my_run_log;
    
    # Run Stuti's tool
@@ -105,8 +104,8 @@ EOF
    echo "running the Docker..." >> $my_run_log;
 
    # start sudo su
+   tmux;
    sudo su;
-
    docker load -i /mnt/star_cuff_docker_1.8.tar;
    python run_docker.py;
    #sudo -k;
@@ -114,24 +113,24 @@ EOF
    # get the output
    echo "saving Docker output" >> $my_run_log;
    ## mkdir for output that my R script can use to combine outputs later
-   sudo mkdir -p $my_save_dir$pair_name/star_2_pass/;
+   mkdir -p $my_save_dir$pair_name/star_2_pass/;
    ## move the genes.fpkm_tracking file to the save location
-   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/;
+   cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/;
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup
    echo "cleanup" >> $my_run_log;
-   sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
-   sudo rm $mate_1_basename;
-   sudo rm $mate_2_basename;
+   rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
+   rm $mate_1_basename;
+   rm $mate_2_basename;
    echo "Done with cleanup" >> $my_run_log;
 
    # copy current logs to the output directory
    echo "copying logs" >> $my_run_log;
-   sudo cp $my_fastq_log $my_save_dir/;
-   sudo cp $my_tar_log $my_save_dir/;
-   sudo cp $my_error_log $my_save_dir/;
-   sudo cp $my_run_log $my_save_dir/;
+   cp $my_fastq_log $my_save_dir/;
+   cp $my_tar_log $my_save_dir/;
+   cp $my_error_log $my_save_dir/;
+   cp $my_run_log $my_save_dir/;
    echo "Done copying logs" >> $my_run_log;
    
    echo "ALL DONE WITH  $pair_name" >> $my_run_log;
@@ -139,6 +138,8 @@ EOF
 
    # close sudo su
    sudo -k;
+   # close tmux session
+   exit;
    
 done;
 
