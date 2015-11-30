@@ -115,7 +115,9 @@ EOF
    ## mkdir for output that my R script can use to combine outputs later
    mkdir -p $my_save_dir$pair_name/star_2_pass/;
    ## move the genes.fpkm_tracking file to the save location
-   cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/;
+   echo "DOING THIS:" >> $my_run_log;
+   echo "cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/" >> $my_run_log;
+   cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup
