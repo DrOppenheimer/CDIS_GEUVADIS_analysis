@@ -25,11 +25,6 @@ my_run_log=$my_list.run_log.txt;
 my_error_log=$my_list.error_log.txt;
 my_save_dir="/mnt/saved_docker_outputs/";
 
-
-
-# expects list to be in this format
-# url_mate_1:url_mate_2
-
 # write header for logs
 echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_fastq_log;
 echo "" >> $my_fastq_log;
