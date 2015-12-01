@@ -14,13 +14,7 @@
 # R script combine_docker_outputs.r
 
 # input args
-my_list=${$1:="err_list_1_of_4.11-18-15.txt.test"}; # list with two samples for testing (4 FASTQ)
-
-
-
-
-FOO=${VARIABLE:=default}
-
+my_list=${1:="err_list_1_of_4.11-18-15.txt.test"}; # list with two samples for testing (4 FASTQ)
 
 # variables
 #my_list="";
