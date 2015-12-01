@@ -125,7 +125,7 @@ EOF
    ## move the genes.fpkm_tracking file to the save location
    echo "DOING THIS:" >> $my_run_log;
    echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/" >> $my_run_log;
-   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/
+   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/genes.fpkm_tracking
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup (if flag is used)
