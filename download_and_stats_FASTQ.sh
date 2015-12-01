@@ -14,7 +14,7 @@
 # R script combine_docker_outputs.r
 
 # input args
-my_list=${1:="err_list_1_of_4.11-18-15.txt.test"}; # list with two samples for testing (4 FASTQ)
+my_list=${1:-"err_list_1_of_4.11-18-15.txt.test"}; # list with two samples for testing (4 FASTQ)
 
 # variables
 #my_list="";
@@ -44,7 +44,6 @@ echo "" >> $my_error_log;
 echo "save_dir:        $my_save_dir"       >> $my_run_log;
 
 # create a directory for the outputs
-
 mkdir -p $my_save_dir;
 
 # move to /mnt/SCRATCH - where Stuti's docker expects the data to be
