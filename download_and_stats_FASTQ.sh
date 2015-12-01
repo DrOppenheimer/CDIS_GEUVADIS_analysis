@@ -3,6 +3,8 @@
 
 # bash -x download_and_stats_FASTQ.sh > debug.log 2>&1 # run like this for verbose debugging
 
+# use "-c" to clean
+
 # This is a script that will
 # downnload the two FASTQ for a mate pair
 # tar them
@@ -11,14 +13,25 @@
 # save the genes.fpkm_tracking in a path suitable for subsequent processing with
 # R script combine_docker_outputs.r
 
+# input args
+my_list=${$1:="err_list_1_of_4.11-18-15.txt.test"}; # list with two samples for testing (4 FASTQ)
+
+
+
+
+FOO=${VARIABLE:=default}
+
+
 # variables
 #my_list="";
-my_list="err_list_1_of_4.11-18-15.txt.test"; # list with two samples for testing (4 FASTQ)
+#my_list="err_list_1_of_4.11-18-15.txt.test"; # list with two samples for testing (4 FASTQ)
 my_fastq_log=$my_list.FASTQ_log.txt;
 my_tar_log=$my_list.tar_log.txt;
 my_run_log=$my_list.run_log.txt;
 my_error_log=$my_list.error_log.txt;
 my_save_dir="/mnt/saved_docker_outputs/";
+
+
 
 # expects list to be in this format
 # url_mate_1:url_mate_2
@@ -120,12 +133,16 @@ EOF
    sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $my_save_dir$pair_name/star_2_pass/
    echo "DONE saving Docker output" >> $my_run_log;
    
-   # cleanup
-   echo "cleanup" >> $my_run_log;
-   sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
-   sudo rm $mate_1_basename;
-   sudo rm $mate_2_basename;
-   echo "Done with cleanup" >> $my_run_log;
+   # cleanup (if flag is used)
+   if [[ $2 = "-c" ]]; then
+       echo "cleanup" >> $my_run_log;
+       sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
+       sudo rm $mate_1_basename;
+       sudo rm $mate_2_basename;
+       echo "Done with cleanup" >> $my_run_log;
+   else
+       echo "No cleanup" >> $my_run_log;
+   fi
 
    # copy current logs to the output directory
    echo "copying logs" >> $my_run_log;
