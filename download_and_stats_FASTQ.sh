@@ -41,13 +41,13 @@ echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_fastq_log;
 echo "" >> $my_fastq_log;
 echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_tar_log;
 echo "" >> $my_tar_log;
-echo "### Run log for processing of $my_list ###" > $my_run_log
-echo "" >> $my_run_log
-echo "list:  "$my_list >> $my_run_log
+echo "### Run log for processing of $my_list ###" > $my_run_log;
+echo "" >> $my_run_log;
+echo "list:  "$my_list >> $my_run_log;
 if [[ $2 = "-c" ]]; then
-     echo "clean: ON" >> $my_run_log
+     echo "clean: ON" >> $my_run_log;
 else
-     echo "clean: OFF" >> $my_run_log
+     echo "clean: OFF" >> $my_run_log;
 fi
 echo "clean:"
 echo "### Error log for processing of $my_list ###" > $my_error_log;
