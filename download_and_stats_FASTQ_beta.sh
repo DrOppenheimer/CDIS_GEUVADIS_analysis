@@ -29,7 +29,7 @@ if echo $1 | grep -e "h"; then
     echo "     -t|--tempdir       (string) Required - path for tempdir (dowload and docker processing location)"
     echo "                                            should include file \"star_cuff_docker_1.8.tar\" "
     echo "                                            as well as dir with ref genome (e.g. \"\")"
-    echo "     -g|--genomedir     (string) Required - location of ref genome, default = \" /mnt/SCRATCH/geuvadis_genome\""
+    #echo "     -g|--genomedir     (string) Required - location of ref genome, default = \" /mnt/SCRATCH/geuvadis_genome\""
     echo "     -c|--clean         (flag)   Optional - option to wipe non-saved results for each mate pair";
     echo "     -p|--useparcel     (flag)   Optional - use parcel for download (OPTION NOT FUNCTIONAL YET)";
     echo "     -h|--help          (flag)   Optional - display this help/usage text"
@@ -126,7 +126,7 @@ while getopts ":l:s:t:cpd" opt; do
 	    echo "OPTIONS:";
 	    echo "     -l|--list          (string) Required - filename of list that contains the url list";
 	    echo "     -s|--savedir       (string) Required - path for output";
-	    echo "     -x|--tempdir       (string) Dir to run Docker tool"; 
+	    echo "     -t|--tempdir       (string) Dir to run Docker tool"; 
 	    echo "     -c|--clean         (flag)   Optional - option to wipe non-saved results for each mate pair";
 	    echo "     -p|--useparcel     (flag)   Optional - use parcel for download (OPTION NOT FUNCTIONAL YET)";
 	    echo "     -h|--help          (flag)   Optional - display this help/usage text"
