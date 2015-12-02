@@ -1,0 +1,5 @@
+### Run log for processing of  ###
+
+list:            
+clean:           OFF
+save_dir:        

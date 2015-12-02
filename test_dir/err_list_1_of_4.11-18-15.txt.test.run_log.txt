@@ -1,0 +1,7 @@
+### Run log for processing of err_list_1_of_4.11-18-15.txt.test ###
+
+list:            err_list_1_of_4.11-18-15.txt.test
+clean:           OFF
+parcel:          OFF
+save_dir:        ./test_dir
+
