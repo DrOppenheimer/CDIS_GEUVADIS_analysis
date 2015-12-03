@@ -245,6 +245,7 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    echo "tar_name:        $tar_name"        >> $my_run_log;
 
    # download both members of the mate pair
+   # This section will be supplemented with code to download with Parcel from the object store
    echo "downloading $mate_1" >> $my_run_log;
    #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
    #####wget $mate_1;
@@ -299,7 +300,7 @@ EOF
    # get the output
    echo "saving Docker output" >> $my_run_log;
    ## mkdir for output that my R script can use to combine outputs later
-   sudo mkdir -p $SAVEDIR$pair_name/star_2_pass/;
+   sudo mkdir -p $SAVEDIR/$pair_name/star_2_pass/;
    ## move the genes.fpkm_tracking file to the save location
    echo "DOING THIS:" >> $my_run_log;
    echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR$pair_name/star_2_pass/" >> $my_run_log;
