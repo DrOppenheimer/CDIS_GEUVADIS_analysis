@@ -15,7 +15,7 @@
 
 # Set defaults
 LIST="err_list_1_of_4.11-18-15.txt.test";
-SAVEDIR="/home/ubuntu/SCRATCH/savved_results";
+SAVEDIR="/home/ubuntu/SCRATCH/saved_results";
 TEMPDIR="/home/ubuntu/SCRATCH/";
 PYTHONSCRIPT="/home/ubuntu/git/CDIS_GEUVADIS_analysis/download_and_stats_FASTQ_beta.sh";
 DOCKERTAR="/home/ubuntu/SCRATCH/star_cuff_docker_1.8.tar";
@@ -159,12 +159,12 @@ if [ ! -f $LIST ]; then
     echo "List $LIST not supplied or does not exist - this is required"
     exit 1
 fi
-# SAVEDIR
-if [ ! -f $SAVEDIR ]; then
+# SAVEDIR is created if it does not exist - no need for check
+# TEMPDIR 
+if [ ! -d $SAVEDIR ]; then
     echo "Savedir $SAVEDIR not supplied - this is a required argument"
     exit 1
 fi
-# TEMPDIR is created if it does not exist - no need for check
 # PYTHONSCRIPT
 if [ ! -f $PYTHONSCRIPT ]; then
     echo "pythonscript $PYTHONSCRIPT not supplied or does not exist - this is required"
