@@ -248,15 +248,15 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    # This section will be supplemented with code to download with Parcel from the object store
    echo "downloading $mate_1" >> $my_run_log;
    #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
-   #####wget $mate_1;
+   wget $mate_1;
    echo "DONE downloading $mate_1" >> $my_run_log;
    echo "downloading $mate_2" >> $my_run_log;
-   #####wget $mate_2;
+   wget $mate_2;
    echo "DONE downloading $mate_2" >> $my_run_log;
 
    # create tar from individual mates
    echo "creating tar $tar_name" >> $my_run_log;
-   #####tar -zcf $tar_name $mate_1_basename $mate_2_basename;
+   tar -zcf $tar_name $mate_1_basename $mate_2_basename;
    echo "DONE creating tar $tar_name" >> $my_run_log;
 
    # get md5s
@@ -293,8 +293,8 @@ EOF
    # start sudo su
    # tmux;
    # sudo su;
-   #####sudo docker load -i $DOCKERTAR;
-   #####sudo python $PYTHONSCRIPT;
+   sudo docker load -i $DOCKERTAR;
+   sudo python $PYTHONSCRIPT;
    #sudo -k;
    echo "DONE with Docker processing" >> $my_run_log;
    # get the output
