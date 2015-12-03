@@ -13,47 +13,15 @@
 # save the genes.fpkm_tracking in a path suitable for subsequent processing with
 # R script combine_docker_outputs.r
 
-# Provide usage if help -h etc is the first argument
-
-if echo $1 | grep -e "h"; then
-    echo "DESCRIPTION: download_and_stats_FASTQ.sh";
-    echo "Script to run Stuti's docker analysis on a list of urls and save output";
-    echo "for post-processing of the docker outputs. It expects a list of urls,";
-    echo "two urls per line (\":\" separated), each representing one member of a";
-    echo "mate pair. These are tar'ed, analyzed with the docker, and selected results";
-    echo "are saved. Creates output for combine_docker_outputs.r";
-    echo "";
-    echo "OPTIONS:";
-    echo "     -l|--list          (string) Required - filename of list that contains the url list";
-    echo "     -s|--savedir       (string) Required - path for output";
-    echo "     -t|--tempdir       (string) Required - path for tempdir (dowload and docker processing location)"
-    echo "                                            should include file \"star_cuff_docker_1.8.tar\" "
-    echo "                                            as well as dir with ref genome (e.g. \"\")"
-    #echo "     -g|--genomedir     (string) Required - location of ref genome, default = \" /mnt/SCRATCH/geuvadis_genome\""
-    echo "     -c|--clean         (flag)   Optional - option to wipe non-saved results for each mate pair";
-    echo "     -p|--useparcel     (flag)   Optional - use parcel for download (OPTION NOT FUNCTIONAL YET)";
-    echo "     -h|--help          (flag)   Optional - display this help/usage text"
-    echo "     -d|--debug         (flag)   Optional - run in debug mode";
-    echo "";
-    echo "USAGE";
-    echo "     download_and_stats_FASTQ.sh -l <filename> -s <savedir> [other options]";
-    echo "";
-    echo "EXAMPLES:";
-    echo "Perform default analysis on test list";
-    echo "     download_and_stats_FASTQ.sh -l err_list_1_of_4.11-18-15.txt.test -s ./";
-    echo ""
-    echo "Kevin P. Keegan, 2015";
-    echo ""
-    exit 1;
-fi
-
-#echo "num_args: "$#;
-#echo "all_args: "$@;
-#echo "arg0    : "$0;
-#echo "arg1    : "$1;
+# Set defaults
+LIST="err_list_1_of_4.11-18-15.txt.test";
+SAVEDIR="/home/ubuntu/SCRATCH/savved_results";
+TEMPDIR="/home/ubuntu/SCRATCH/";
+PYTHONSCRIPT="/home/ubuntu/git/CDIS_GEUVADIS_analysis/download_and_stats_FASTQ_beta.sh";
+DOCKERTAR="/home/ubuntu/SCRATCH/star_cuff_docker_1.8.tar";
 
 # Parse input options
-while getopts ":l:s:t:cpd" opt; do
+while getopts ":l:s:t:p:d:cdh" opt; do
     
     case $opt in
 	l)
@@ -92,6 +60,30 @@ while getopts ":l:s:t:cpd" opt; do
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
 	    ;;
+	p)
+	    echo "-p was triggered, Parameter: $OPTARG" >&2
+	    PYTHONSCRIPT=$OPTARG
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    exit 1
+	    ;;
+	:)
+	    echo "Option -$OPTARG requires an argument." >&2
+	    exit 1
+	    ;;
+	d)
+	    echo "-d was triggered, Parameter: $OPTARG" >&2
+	    DOCKERTAR=$OPTARG
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    exit 1
+	    ;;
+	:)
+	    echo "Option -$OPTARG requires an argument." >&2
+	    exit 1
+	    ;;
 	# g)
 	#     echo "-g was triggered, Parameter: $OPTARG" >&2
 	#     GENOMEDIR=$OPTARG
@@ -108,11 +100,9 @@ while getopts ":l:s:t:cpd" opt; do
 	c)
 	    echo "-c was triggered, Parameter: $OPTARG" >&2
 	    ;;
-	p)
-	    echo "-p was triggered, Parameter: $OPTARG" >&2
-	    ;;
 	d)
 	    echo "-d was triggered, Parameter: $OPTARG" >&2
+	    DEBUG=1;
 	    ;;
 	h)
 	    #echo "-h was triggered, Parameter: $OPTARG" >&2 # Show the help 
@@ -122,15 +112,23 @@ while getopts ":l:s:t:cpd" opt; do
 	    echo "two urls per line (\":\" separated), each representing one member of a";
 	    echo "mate pair. These are tar'ed, analyzed with the docker, and selected results";
 	    echo "are saved. Creates output for combine_docker_outputs.r";
+	    echo "     Downloads are with wget by default, with parcel if the option is selected";
 	    echo "";
 	    echo "OPTIONS:";
 	    echo "     -l|--list          (string) Required - filename of list that contains the url list";
+	    echo "                                 Default = \"$LIST\"";
 	    echo "     -s|--savedir       (string) Required - path for output";
-	    echo "     -t|--tempdir       (string) Dir to run Docker tool"; 
+	    echo "                                 Default = \"$SAVEDIR\"";
+	    echo "     -t|--tempdir       (string) Dir to run Docker tool";
+	    echo "                                 Default = \"$TEMPDIR\"";
+	    echo "     -p|--pythonscript  (string) Python script run_docker.py";
+	    echo "                                 Default = \"$PYTHONSCRIPT\"";
+	    echo "     -d|--dockertar     (string) Docker tar file star_cuff_docker_1.8.tar";
+	    echo "                                 Default = \"$DOCKERTAR\"";
+	    #echo "     -u|--useparcel     (flag)   Optional - use parcel for download (OPTION NOT FUNCTIONAL YET)";
 	    echo "     -c|--clean         (flag)   Optional - option to wipe non-saved results for each mate pair";
-	    echo "     -p|--useparcel     (flag)   Optional - use parcel for download (OPTION NOT FUNCTIONAL YET)";
-	    echo "     -h|--help          (flag)   Optional - display this help/usage text"
 	    echo "     -d|--debug         (flag)   Optional - run in debug mode";
+	    echo "     -h|--help          (flag)   Optional - display this help/usage text"
 	    echo "";
 	    echo "USAGE";
 	    echo "     download_and_stats_FASTQ.sh -l <filename> -s <savedir> [other options]";
@@ -138,10 +136,11 @@ while getopts ":l:s:t:cpd" opt; do
 	    echo "EXAMPLES:";
 	    echo "Perform default analysis on test list";
 	    echo "     download_and_stats_FASTQ.sh -l err_list_1_of_4.11-18-15.txt.test -s ./";
+	    echo ""
 	    echo "Kevin P. Keegan, 2015";
 	    exit 1;
 	    ;;
-	
+    
 	\?)
 	    echo "Invalid option: -$OPTARG" >&2
 	    exit 1
@@ -152,6 +151,29 @@ while getopts ":l:s:t:cpd" opt; do
 	    ;;
     esac
 done
+
+# Check for requirements - fail with error if any are missing
+
+# LIST
+if [ ! -f $LIST ]; then
+    echo "List $LIST not supplied or does not exist - this is required"
+    exit 1
+fi
+# SAVEDIR
+if [ ! -f $SAVEDIR ]; then
+    echo "Savedir $SAVEDIR not supplied - this is a required argument"
+    exit 1
+fi
+# TEMPDIR is created if it does not exist - no need for check
+# PYTHONSCRIPT
+if [ ! -f $PYTHONSCRIPT ]; then
+    echo "pythonscript $PYTHONSCRIPT not supplied or does not exist - this is required"
+    exit 1
+fi
+if [ ! -f $DOCKERTAR ]; then
+    echo "dockertar $DOCKERTAR not supplied or does not exist - this is required"
+    exit 1
+fi
 
 # create a directory for the outputs
 mkdir -p $SAVEDIR;
@@ -258,8 +280,8 @@ EOF
    # start sudo su
    # tmux;
    # sudo su;
-   #####sudo docker load -i /mnt/star_cuff_docker_1.8.tar;
-   #####sudo python /home/ubuntu/git/CDIS_GEUVADIS_analysis/run_docker.py;
+   #####sudo docker load -i $DOCKERTAR;
+   #####sudo python $PYTHONSCRIPT;
    #sudo -k;
    echo "DONE with Docker processing" >> $my_run_log;
    # get the output
