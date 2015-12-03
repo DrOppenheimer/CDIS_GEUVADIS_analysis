@@ -163,8 +163,8 @@ if [ ! -f $LIST ]; then
 fi
 # SAVEDIR is created if it does not exist - no need for check
 # TEMPDIR 
-if [ ! -d $SAVEDIR ]; then
-    echo "Savedir $SAVEDIR not supplied - this is a required argument"
+if [ ! -d $TEMPDIR ]; then
+    echo "Tempdir $TEMPDIR not supplied - this is a required argument"
     exit 1
 fi
 # PYTHONSCRIPT
