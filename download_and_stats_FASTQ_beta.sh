@@ -17,7 +17,7 @@
 LIST="err_list_1_of_4.11-18-15.txt.test";
 SAVEDIR="/home/ubuntu/SCRATCH/saved_results";
 TEMPDIR="/home/ubuntu/SCRATCH/";
-PYTHONSCRIPT="/home/ubuntu/git/CDIS_GEUVADIS_analysis/download_and_stats_FASTQ_beta.sh";
+PYTHONSCRIPT="/home/ubuntu/git/CDIS_GEUVADIS_analysis/run_docker.py";
 DOCKERTAR="/home/ubuntu/SCRATCH/star_cuff_docker_1.8.tar";
 
 # Parse input options
