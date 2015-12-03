@@ -134,8 +134,10 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "     download_and_stats_FASTQ.sh -l <filename> -s <savedir> [other options]";
 	    echo "";
 	    echo "EXAMPLES:";
-	    echo "Perform default analysis on test list";
+	    echo "Perform default analysis on test list:";
 	    echo "     download_and_stats_FASTQ.sh -l err_list_1_of_4.11-18-15.txt.test -s ./";
+	    echo "Default analysis with full logging:"
+	    echo "     bash -x download_and_stats_FASTQ_beta.sh > debug.log 2>&1"
 	    echo ""
 	    echo "Kevin P. Keegan, 2015";
 	    exit 1;
@@ -198,16 +200,26 @@ echo ""                                             >> $my_tar_log;
 echo "### Run log for processing of $LIST ###"      > $my_run_log;
 echo ""                                             >> $my_run_log;
 echo "list:            "$LIST                       >> $my_run_log;
+echo "savedir:         "$SAVEDIR                    >> $my_run_log;
+echo "tempdir:         "$TEMPDIR                    >> $my_run_log;
+echo "pythonscript:    "$PYTHONSCRIPT               >> $my_run_log;
+echo "dockertar:       "$DOCKERTAR                  >> $my_run_log;
 if [[ $2 = "-c" ]]; then
      echo "clean:           ON"                     >> $my_run_log;
 else
      echo "clean:           OFF"                    >> $my_run_log;
 fi
-if [[ $2 = "-p" ]]; then
-     echo "parcel:          ON"                     >> $my_run_log;
+if [[ $2 = "-u" ]]; then
+     echo "useparcel:       ON"                     >> $my_run_log;
 else
-     echo "parcel:          OFF"                    >> $my_run_log;
+     echo "useparcel:       OFF"                    >> $my_run_log;
 fi
+if [[ $2 = "-d" ]]; then
+     echo "debug:           ON"                     >> $my_run_log;
+else
+     echo "debug:           OFF"                    >> $my_run_log;
+fi
+
 echo "save_dir:        $SAVEDIR"                    >> $my_run_log;
 echo "" >> $my_run_log;
 
@@ -291,7 +303,7 @@ EOF
    ## move the genes.fpkm_tracking file to the save location
    echo "DOING THIS:" >> $my_run_log;
    echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR$pair_name/star_2_pass/" >> $my_run_log;
-   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR$pair_name/star_2_pass/
+   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR/$pair_name/star_2_pass/
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup (if flag is used)
