@@ -22,7 +22,6 @@ DOCKERTAR="/home/ubuntu/SCRATCH/star_cuff_docker_1.8.tar";
 
 # Parse input options
 while getopts ":l:s:t:p:d:cdh" opt; do
-    
     case $opt in
 	l)
 	    echo "-l was triggered, Parameter: $OPTARG" >&2
