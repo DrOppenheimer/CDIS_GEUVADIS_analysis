@@ -98,6 +98,7 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	#     ;;
 	c)
 	    echo "-c was triggered, Parameter: $OPTARG" >&2
+	    $CLEAN=1;
 	    ;;
 	d)
 	    echo "-d was triggered, Parameter: $OPTARG" >&2
@@ -307,11 +308,12 @@ EOF
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup (if flag is used)
-   if [[ $2 = "-c" ]]; then
+   if [[ $CLEAN -eq 1 ]]; then
        echo "cleanup" >> $my_run_log;
        sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
        sudo rm $mate_1_basename;
        sudo rm $mate_2_basename;
+       sudo rm $tar_name;
        echo "Done with cleanup" >> $my_run_log;
    else
        echo "No cleanup" >> $my_run_log;
@@ -326,6 +328,7 @@ EOF
    # echo "Done copying logs" >> $my_run_log;
    
    echo "ALL DONE WITH  $pair_name" >> $my_run_log;
+   echo "" >> $my_run_log;
 
    # close sudo su
    # sudo -k;
