@@ -19,6 +19,7 @@ SAVEDIR="/home/ubuntu/SCRATCH/saved_results";
 TEMPDIR="/home/ubuntu/SCRATCH/";
 PYTHONSCRIPT="/home/ubuntu/git/CDIS_GEUVADIS_analysis/run_docker.py";
 DOCKERTAR="/home/ubuntu/SCRATCH/star_cuff_docker_1.8.tar";
+PARCELIP="192.170.232.76";
 
 # Parse input options
 while getopts ":l:s:t:p:d:cdh" opt; do
@@ -83,6 +84,18 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
 	    ;;
+	i)
+	    echo "-i was triggered, Parameter: $OPTARG" >&2
+	    PARCELIP=$OPTARG
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    exit 1
+	    ;;
+	:)
+	    echo "Option -$OPTARG requires an argument." >&2
+	    exit 1
+	    ;;
 	# g)
 	#     echo "-g was triggered, Parameter: $OPTARG" >&2
 	#     GENOMEDIR=$OPTARG
@@ -96,9 +109,14 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	#     echo "Option -$OPTARG requires an argument." >&2
 	#     exit 1
 	#     ;;
+	u)
+	    echo "-c was triggered, Parameter: $OPTARG" >&2
+	    USEPARCEL=1;
+	    ;;
+	
 	c)
 	    echo "-c was triggered, Parameter: $OPTARG" >&2
-	    $CLEAN=1;
+	    CLEAN=1;
 	    ;;
 	d)
 	    echo "-d was triggered, Parameter: $OPTARG" >&2
@@ -125,7 +143,11 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "                                 Default = \"$PYTHONSCRIPT\"";
 	    echo "     -d|--dockertar     (string) Docker tar file star_cuff_docker_1.8.tar";
 	    echo "                                 Default = \"$DOCKERTAR\"";
-	    #echo "     -u|--useparcel     (flag)   Optional - use parcel for download (OPTION NOT FUNCTIONAL YET)";
+	    echo "     -u|--useparcel     (flag)   Optional - use parcel for download (OPTION NOT FUNCTIONAL YET)";
+	    echo "                                      Note: This option assumes you have Parcel installed and configured"
+	    echo "                                      127.0.0.1 parcel.opensciencedatacloud.org in /etc/hosts"
+	    echo "     -i|--parcelip      (string) Required with -u|--useparcel - ip address of the parcel server"
+	    echo "                                 Default = $PARCELIP"
 	    echo "     -c|--clean         (flag)   Optional - option to wipe non-saved results for each mate pair";
 	    echo "     -d|--debug         (flag)   Optional - run in debug mode";
 	    echo "     -h|--help          (flag)   Optional - display this help/usage text"
@@ -204,27 +226,29 @@ echo "savedir:         "$SAVEDIR                    >> $my_run_log;
 echo "tempdir:         "$TEMPDIR                    >> $my_run_log;
 echo "pythonscript:    "$PYTHONSCRIPT               >> $my_run_log;
 echo "dockertar:       "$DOCKERTAR                  >> $my_run_log;
-if [[ $2 = "-c" ]]; then
-     echo "clean:           ON"                     >> $my_run_log;
-else
-     echo "clean:           OFF"                    >> $my_run_log;
-fi
-if [[ $2 = "-u" ]]; then
+echo "save_dir:        $SAVEDIR"                    >> $my_run_log;
+echo ""                                             >> $my_run_log;
+# entry for parcel option
+if [[ $USEPARCEL -eq 1 ]]; then
      echo "useparcel:       ON"                     >> $my_run_log;
 else
      echo "useparcel:       OFF"                    >> $my_run_log;
 fi
-if [[ $2 = "-d" ]]; then
+# entry for clean option
+if [[ $CLEAN -eq 1 ]]; then
+     echo "clean:           ON"                     >> $my_run_log;
+else
+     echo "clean:           OFF"                    >> $my_run_log;
+fi
+# entry for debug option
+if [[ $DEBUG -eq "-d" ]]; then
      echo "debug:           ON"                     >> $my_run_log;
 else
      echo "debug:           OFF"                    >> $my_run_log;
 fi
 
-echo "save_dir:        $SAVEDIR"                    >> $my_run_log;
-echo "" >> $my_run_log;
-
-# move to /mnt/SCRATCH - where Stuti's docker expects the data to be
-mkdir -p $TEMPDIR
+# move to $TEMPDIR - where Stuti's docker expects the data to be
+mkdir -p $TEMPDIR;
 cd $TEMPDIR;
 
 for i in `cat $LIST`;
@@ -246,14 +270,31 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
 
    # download both members of the mate pair
    # This section will be supplemented with code to download with Parcel from the object store
-   echo "downloading $mate_1" >> $my_run_log;
-   #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
-   wget $mate_1;
-   echo "DONE downloading $mate_1" >> $my_run_log;
-   echo "downloading $mate_2" >> $my_run_log;
-   wget $mate_2;
-   echo "DONE downloading $mate_2" >> $my_run_log;
-
+   if [[ $USEPARCEL -eq 1 ]]; then
+       # download with parcel
+       # start parcel in a separate screen session
+       echo "Starting parcel session with server $PARCELIP" >> $my_run_log;
+       screen -dmS parcel
+       screen -S parcel -X stuff "parcel-tcp2udt $PARCELIP:9000\n"
+       # perform downloads with parcel
+       wget $mate_1;
+       echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
+       echo "downloading $mate_2" >> $my_run_log;
+       wget $mate_2;
+       echo "DONE downloading $mate_2" >> $my_run_log;
+       # quit parcel session
+       screen -r parcel -X kill
+       echo "parcel session with server $PARCELIP TERMINATED" >> $my_run_log;
+   else
+       # download without parcel
+       echo "downloading $mate_1 withOUT parcel" >> $my_run_log;
+       #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
+       wget $mate_1;
+       echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
+       echo "downloading $mate_2" >> $my_run_log;
+       wget $mate_2;
+       echo "DONE downloading $mate_2" >> $my_run_log;
+   fi
    # create tar from individual mates
    echo "creating tar $tar_name" >> $my_run_log;
    tar -zcf $tar_name $mate_1_basename $mate_2_basename;
@@ -339,6 +380,25 @@ done;
 
 echo "" >> $my_run_log
 echo "ALL DONE PROCESSING $LIST" >> $my_run_log
+
+
+
+
+
+
+# # From Satish 12-3-15 # INSTALLING AND USING PARCEL
+# # Install
+# python setup.py develop
+# sudo apt-get install python-pip
+# sudo python setup.py develop
+# # Setup
+# sudo vi /etc/hosts  - add 127.0.0.1 parcel.opensciencedatacloud.org
+# parcel-tcp2udt 192.170.232.76:9000 &
+# parcel-udt2tcp localhost:9000 &
+# wget https://parcel.opensciencedatacloud.org:9000/asgc-geuvadis/ERR188021.tar.gz
+# # so if u see here.. I have  'python setup.py develop' twice.. this is because it failed first and then I had to do a apt-get install python-pip
+
+
 
 
 # Notes:
