@@ -13,6 +13,23 @@
 # save the genes.fpkm_tracking in a path suitable for subsequent processing with
 # R script combine_docker_outputs.r
 
+# 12-7-15 Notes:
+# As of now this script can download data via FTP (probably Parcel too - have to check), tar mate pairs, apply Stuti's docker, and
+# saves selected output from the docker to local disk (just the fpkm abundancees for the genes) 
+# FEATURES TO TEST
+# - parcel download
+# FEATREUS TO ADD
+# - parcel upload
+# - select data procuts to upload
+# - make name of output generic (edit in Stuti's script run_docker.py )
+# - list of results to upload as separated list
+# - generalize the results folder (from geuvadis_results)
+# OTHER THINGS TO UPDATE
+# - Zhenyu suggested that you limit the reference database to only consider
+#     entries that are for protein encoding genes
+# - Separate script to automate creation and editing of reference
+#     from Stuti's notes and Zhenyu's suggestion above
+
 # Set defaults
 LIST="err_list_1_of_4.11-18-15.txt.test";
 SAVEDIR="/home/ubuntu/SCRATCH/saved_results";
@@ -369,6 +386,18 @@ EOF
 	echo "DOING THIS:" >> $my_run_log;
 	echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR$pair_name/star_2_pass/" >> $my_run_log;
 	sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR/$pair_name/star_2_pass/
+
+	# Once the new file sotre is ready, copy these results:
+	# May want to generalize upload results argument to accept a list of results to upload
+	# ~/SCRATCH/geuvadis_results/qc                     # this is a directory
+	# ~/SCRATCH/geuvadis_results/star_2_pass            # this is a directory
+	# ~/SCRATCH/geuvadis_results/$pair_star.log         # this is a file
+	# exclude these:
+	# ~/SCRATCH/geuvadis_results/$pair_name_fastq_files # this is a directory
+	# ~/SCRATCH/geuvadis_results/tmp                    # this is a directory
+
+	# Push results to store:
+	
 	echo `date`                              >> $my_run_log;
 	echo "DONE saving Docker output" >> $my_run_log;
 	
