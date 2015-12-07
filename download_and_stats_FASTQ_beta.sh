@@ -207,19 +207,24 @@ my_fastq_log=$SAVEDIR/$LIST.FASTQ_log.txt;
 my_tar_log=$SAVEDIR/$LIST.tar_log.txt;
 my_run_log=$SAVEDIR/$LIST.run_log.txt;
 my_error_log=$SAVEDIR/$LIST.error_log.txt;
+start_date=`date`;
 
 # write headers for log files
 # error log
 echo "### Error log for processing of $LIST ###"    > $my_error_log;
+echo `date`                                         >> $my_error_log;
 echo ""                                             >> $my_error_log;
 # fastq log
 echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_fastq_log;
+echo $start_date                                    >> $my_fastq_log;
 echo ""                                             >> $my_fastq_log;
 # tar log
 echo "file_name\toriginal_url\tbasename\tmd5\tsize" > $my_tar_log;
+echo $start_date                                    >> $my_tar_log;
 echo ""                                             >> $my_tar_log;
 # run log
 echo "### Run log for processing of $LIST ###"      > $my_run_log;
+echo $start_date                                    >> $my_run_log;
 echo ""                                             >> $my_run_log;
 echo "list:            "$LIST                       >> $my_run_log;
 echo "savedir:         "$SAVEDIR                    >> $my_run_log;
@@ -260,6 +265,7 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    mate_2_basename=`basename $mate_2`;
    pair_name=`echo $mate_1_basename | cut -f 1 -d "_"`;
    tar_name=$pair_name.fastq.tar.gz;
+   echo `date`                              >> $my_run_log;
    echo "processing:      $pair_name"       >> $my_run_log;
    echo "pair_name:       $pair_name"       >> $my_run_log;
    echo "mate_1:          $mate_1"          >> $my_run_log;
@@ -278,26 +284,32 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
        screen -S parcel -X stuff "parcel-tcp2udt $PARCELIP:9000\n"
        # perform downloads with parcel
        wget $mate_1;
+       echo `date`                              >> $my_run_log;
        echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
        echo "downloading $mate_2" >> $my_run_log;
        wget $mate_2;
+       echo `date`                              >> $my_run_log;
        echo "DONE downloading $mate_2" >> $my_run_log;
        # quit parcel session
        screen -r parcel -X kill
+       echo `date`                              >> $my_run_log;
        echo "parcel session with server $PARCELIP TERMINATED" >> $my_run_log;
    else
        # download without parcel
        echo "downloading $mate_1 withOUT parcel" >> $my_run_log;
        #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
        wget $mate_1;
+       echo `date`                              >> $my_run_log;
        echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
        echo "downloading $mate_2" >> $my_run_log;
        wget $mate_2;
+       echo `date`                              >> $my_run_log;
        echo "DONE downloading $mate_2" >> $my_run_log;
    fi
    # create tar from individual mates
    echo "creating tar $tar_name" >> $my_run_log;
    tar -zcf $tar_name $mate_1_basename $mate_2_basename;
+   echo `date`                              >> $my_run_log;
    echo "DONE creating tar $tar_name" >> $my_run_log;
 
    # get md5s
@@ -305,6 +317,7 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    md5_mate1=`md5sum $mate_1_basename | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
    md5_mate2=`md5sum $mate_2_basename | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
    md5_tar=`md5sum $tar_name | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
+   echo `date`                              >> $my_run_log;
    echo "DONE calculating md5's" >> $my_run_log;
    
    # get sizes
@@ -312,6 +325,7 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    size_mate1=`stat -c%s $mate_1_basename`; # 2>> $my_error_log 1 >> $my_run_log;
    size_mate2=`stat -c%s $mate_2_basename`; # 2>> $my_error_log 1 >> $my_run_log;
    size_tar=`stat -c%s $tar_name`; # 2>> $my_error_log 1 >> $my_run_log;
+   echo `date`                              >> $my_run_log;
    echo "DONE calculating sizes" >> $my_run_log;
    
    # print values to logs
@@ -321,6 +335,7 @@ do mate_1=`echo $i | cut -f 1 -d ":"`;
    echo $mate_2_basename\t$mate_2\t$mate_2_basename\t$md5_mate2\t$size_mate2 >> $my_fastq_log; # mate_2 FASTQ;
    echo "DONE printing stats of $mate_2_basename" >> $my_run_log;
    echo $tar_name\t"NA"\t$pair_name\t$md5_tar\t$size_tar >> $my_tar_log; # tar created from mate_1 and mate_2
+   echo `date`                              >> $my_run_log;
    echo "DONE printing calculated values to logs" >> $my_run_log;
    
    # Run Stuti's tool
@@ -337,6 +352,7 @@ EOF
    sudo docker load -i $DOCKERTAR;
    sudo python $PYTHONSCRIPT;
    #sudo -k;
+   echo `date`                              >> $my_run_log;
    echo "DONE with Docker processing" >> $my_run_log;
    # get the output
    echo "saving Docker output" >> $my_run_log;
@@ -346,6 +362,7 @@ EOF
    echo "DOING THIS:" >> $my_run_log;
    echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR$pair_name/star_2_pass/" >> $my_run_log;
    sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR/$pair_name/star_2_pass/
+   echo `date`                              >> $my_run_log;
    echo "DONE saving Docker output" >> $my_run_log;
    
    # cleanup (if flag is used)
@@ -355,8 +372,10 @@ EOF
        sudo rm $mate_1_basename;
        sudo rm $mate_2_basename;
        sudo rm $tar_name;
+       echo `date`                              >> $my_run_log;
        echo "Done with cleanup" >> $my_run_log;
    else
+       echo `date`                              >> $my_run_log;
        echo "No cleanup" >> $my_run_log;
    fi
 
@@ -367,7 +386,8 @@ EOF
    # sudo cp $my_error_log $SAVEDIR/;
    # sudo cp $my_run_log $SAVEDIR/;
    # echo "Done copying logs" >> $my_run_log;
-   
+
+   echo `date`                              >> $my_run_log;
    echo "ALL DONE WITH  $pair_name" >> $my_run_log;
    echo "" >> $my_run_log;
 
@@ -379,6 +399,7 @@ EOF
 done;
 
 echo "" >> $my_run_log
+echo `date`                              >> $my_run_log;
 echo "ALL DONE PROCESSING $LIST" >> $my_run_log
 
 
