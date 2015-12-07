@@ -135,6 +135,7 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "OPTIONS:";
 	    echo "     -l|--list          (string) Required - filename of list that contains the url list";
 	    echo "                                 Default = \"$LIST\"";
+	    echo"                                  Lines that start with a \"#\" will be skipped"
 	    echo "     -s|--savedir       (string) Required - path for output";
 	    echo "                                 Default = \"$SAVEDIR\"";
 	    echo "     -t|--tempdir       (string) Dir to run Docker tool";
@@ -224,6 +225,8 @@ echo $start_date                                    >> $my_tar_log;
 echo ""                                             >> $my_tar_log;
 # run log
 echo "### Run log for processing of $LIST ###"      > $my_run_log;
+echo "script: "$0                                   >> $my_run_log;
+echo "arguments: "$@                                >> $my_run_log;
 echo $start_date                                    >> $my_run_log;
 echo ""                                             >> $my_run_log;
 echo "list:            "$LIST                       >> $my_run_log;
@@ -257,145 +260,150 @@ mkdir -p $TEMPDIR;
 cd $TEMPDIR;
 
 for i in `cat $LIST`;
+	
+do
+    # skip line if it starts with #
+    echo $i | grep -e '^#' &> /dev/null
+    if [[ $? != 0 ]]; then
+	# retireve targets from list - generate local filenames
+	mate_1=`echo $i | cut -f 1 -d ":"`;
+	mate_2=`echo $i | cut -f 2 -d ":"`;
+	mate_1_basename=`basename $mate_1`;
+	mate_2_basename=`basename $mate_2`;
+	pair_name=`echo $mate_1_basename | cut -f 1 -d "_"`;
+	tar_name=$pair_name.fastq.tar.gz;
+	echo `date`                              >> $my_run_log;
+	echo "processing:      $pair_name"       >> $my_run_log;
+	echo "pair_name:       $pair_name"       >> $my_run_log;
+	echo "mate_1:          $mate_1"          >> $my_run_log;
+	echo "mate_1_basename: $mate_1_basename" >> $my_run_log;
+	echo "mate_2:          $mate_2"          >> $my_run_log;
+	echo "mate_1_basename: $mate_2_basename" >> $my_run_log;
+	echo "tar_name:        $tar_name"        >> $my_run_log;
 
-# retireve targets from list - generate local filenames	 
-do mate_1=`echo $i | cut -f 1 -d ":"`;
-   mate_2=`echo $i | cut -f 2 -d ":"`;
-   mate_1_basename=`basename $mate_1`;
-   mate_2_basename=`basename $mate_2`;
-   pair_name=`echo $mate_1_basename | cut -f 1 -d "_"`;
-   tar_name=$pair_name.fastq.tar.gz;
-   echo `date`                              >> $my_run_log;
-   echo "processing:      $pair_name"       >> $my_run_log;
-   echo "pair_name:       $pair_name"       >> $my_run_log;
-   echo "mate_1:          $mate_1"          >> $my_run_log;
-   echo "mate_1_basename: $mate_1_basename" >> $my_run_log;
-   echo "mate_2:          $mate_2"          >> $my_run_log;
-   echo "mate_1_basename: $mate_2_basename" >> $my_run_log;
-   echo "tar_name:        $tar_name"        >> $my_run_log;
-
-   # download both members of the mate pair
-   # This section will be supplemented with code to download with Parcel from the object store
-   if [[ $USEPARCEL -eq 1 ]]; then
-       # download with parcel
-       # start parcel in a separate screen session
-       echo "Starting parcel session with server $PARCELIP" >> $my_run_log;
-       screen -dmS parcel
-       screen -S parcel -X stuff "parcel-tcp2udt $PARCELIP:9000\n"
-       # perform downloads with parcel
-       wget $mate_1;
-       echo `date`                              >> $my_run_log;
-       echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
-       echo "downloading $mate_2" >> $my_run_log;
-       wget $mate_2;
-       echo `date`                              >> $my_run_log;
-       echo "DONE downloading $mate_2" >> $my_run_log;
-       # quit parcel session
-       screen -r parcel -X kill
-       echo `date`                              >> $my_run_log;
-       echo "parcel session with server $PARCELIP TERMINATED" >> $my_run_log;
-   else
-       # download without parcel
-       echo "downloading $mate_1 withOUT parcel" >> $my_run_log;
-       #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
-       wget $mate_1;
-       echo `date`                              >> $my_run_log;
-       echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
-       echo "downloading $mate_2" >> $my_run_log;
-       wget $mate_2;
-       echo `date`                              >> $my_run_log;
-       echo "DONE downloading $mate_2" >> $my_run_log;
-   fi
-   # create tar from individual mates
-   echo "creating tar $tar_name" >> $my_run_log;
-   tar -zcf $tar_name $mate_1_basename $mate_2_basename;
-   echo `date`                              >> $my_run_log;
-   echo "DONE creating tar $tar_name" >> $my_run_log;
-
-   # get md5s
-   echo "calculating md5's" >> $my_run_log;
-   md5_mate1=`md5sum $mate_1_basename | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
-   md5_mate2=`md5sum $mate_2_basename | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
-   md5_tar=`md5sum $tar_name | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
-   echo `date`                              >> $my_run_log;
-   echo "DONE calculating md5's" >> $my_run_log;
-   
-   # get sizes
-   echo "calculating sizes" >> $my_run_log;
-   size_mate1=`stat -c%s $mate_1_basename`; # 2>> $my_error_log 1 >> $my_run_log;
-   size_mate2=`stat -c%s $mate_2_basename`; # 2>> $my_error_log 1 >> $my_run_log;
-   size_tar=`stat -c%s $tar_name`; # 2>> $my_error_log 1 >> $my_run_log;
-   echo `date`                              >> $my_run_log;
-   echo "DONE calculating sizes" >> $my_run_log;
-   
-   # print values to logs
-   echo "printing calculated values to logs" >> $my_run_log;
-   echo $mate_1_basename\t$mate_1\t$mate_1_basename\t$md5_mate1\t$size_mate1 >> $my_fastq_log; # mate_1 FASTQ;
-   echo "DONE printing stats of $mate_1_base" >> $my_run_log;
-   echo $mate_2_basename\t$mate_2\t$mate_2_basename\t$md5_mate2\t$size_mate2 >> $my_fastq_log; # mate_2 FASTQ;
-   echo "DONE printing stats of $mate_2_basename" >> $my_run_log;
-   echo $tar_name\t"NA"\t$pair_name\t$md5_tar\t$size_tar >> $my_tar_log; # tar created from mate_1 and mate_2
-   echo `date`                              >> $my_run_log;
-   echo "DONE printing calculated values to logs" >> $my_run_log;
-   
-   # Run Stuti's tool
-   ## populate the filenames_1.txt file with a single jobname
-cat >filenames_1.txt<<EOF
+	# download both members of the mate pair
+	# This section will be supplemented with code to download with Parcel from the object store
+	if [[ $USEPARCEL -eq 1 ]]; then
+	    # download with parcel
+	    # start parcel in a separate screen session
+	    echo "Starting parcel session with server $PARCELIP" >> $my_run_log;
+	    screen -dmS parcel
+	    screen -S parcel -X stuff "parcel-tcp2udt $PARCELIP:9000\n"
+	    # perform downloads with parcel
+	    wget $mate_1;
+	    echo `date`                              >> $my_run_log;
+	    echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
+	    echo "downloading $mate_2" >> $my_run_log;
+	    wget $mate_2;
+	    echo `date`                              >> $my_run_log;
+	    echo "DONE downloading $mate_2" >> $my_run_log;
+	    # quit parcel session
+	    screen -r parcel -X kill
+	    echo `date`                              >> $my_run_log;
+	    echo "parcel session with server $PARCELIP TERMINATED" >> $my_run_log;
+	else
+	    # download without parcel
+	    echo "downloading $mate_1 withOUT parcel" >> $my_run_log;
+	    #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
+	    wget $mate_1;
+	    echo `date`                              >> $my_run_log;
+	    echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
+	    echo "downloading $mate_2" >> $my_run_log;
+	    wget $mate_2;
+	    echo `date`                              >> $my_run_log;
+	    echo "DONE downloading $mate_2" >> $my_run_log;
+	fi
+	# create tar from individual mates
+	echo "creating tar $tar_name" >> $my_run_log;
+	tar -zcf $tar_name $mate_1_basename $mate_2_basename;
+	echo `date`                              >> $my_run_log;
+	echo "DONE creating tar $tar_name" >> $my_run_log;
+	
+	# get md5s
+	echo "calculating md5's" >> $my_run_log;
+	md5_mate1=`md5sum $mate_1_basename | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
+	md5_mate2=`md5sum $mate_2_basename | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
+	md5_tar=`md5sum $tar_name | cut -f1 -d " "`; # 2>> $my_error_log 1 >> $my_run_log;
+	echo `date`                              >> $my_run_log;
+	echo "DONE calculating md5's" >> $my_run_log;
+	
+	# get sizes
+	echo "calculating sizes" >> $my_run_log;
+	size_mate1=`stat -c%s $mate_1_basename`; # 2>> $my_error_log 1 >> $my_run_log;
+	size_mate2=`stat -c%s $mate_2_basename`; # 2>> $my_error_log 1 >> $my_run_log;
+	size_tar=`stat -c%s $tar_name`; # 2>> $my_error_log 1 >> $my_run_log;
+	echo `date`                              >> $my_run_log;
+	echo "DONE calculating sizes" >> $my_run_log;
+	
+	# print values to logs
+	echo "printing calculated values to logs" >> $my_run_log;
+	echo $mate_1_basename\t$mate_1\t$mate_1_basename\t$md5_mate1\t$size_mate1 >> $my_fastq_log; # mate_1 FASTQ;
+	echo "DONE printing stats of $mate_1_base" >> $my_run_log;
+	echo $mate_2_basename\t$mate_2\t$mate_2_basename\t$md5_mate2\t$size_mate2 >> $my_fastq_log; # mate_2 FASTQ;
+	echo "DONE printing stats of $mate_2_basename" >> $my_run_log;
+	echo $tar_name\t"NA"\t$pair_name\t$md5_tar\t$size_tar >> $my_tar_log; # tar created from mate_1 and mate_2
+	echo `date`                              >> $my_run_log;
+	echo "DONE printing calculated values to logs" >> $my_run_log;
+	
+	# Run Stuti's tool
+	## populate the filenames_1.txt file with a single jobname
+	cat >filenames_1.txt<<EOF
 $pair_name.fastq.tar.gz
 EOF
-   ## run load and run the docker tool
-   echo "running the Docker..." >> $my_run_log;
-
-   # start sudo su
-   # tmux;
-   # sudo su;
-   sudo docker load -i $DOCKERTAR;
-   sudo python $PYTHONSCRIPT;
-   #sudo -k;
-   echo `date`                              >> $my_run_log;
-   echo "DONE with Docker processing" >> $my_run_log;
-   # get the output
-   echo "saving Docker output" >> $my_run_log;
-   ## mkdir for output that my R script can use to combine outputs later
-   sudo mkdir -p $SAVEDIR/$pair_name/star_2_pass/;
-   ## move the genes.fpkm_tracking file to the save location
-   echo "DOING THIS:" >> $my_run_log;
-   echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR$pair_name/star_2_pass/" >> $my_run_log;
-   sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR/$pair_name/star_2_pass/
-   echo `date`                              >> $my_run_log;
-   echo "DONE saving Docker output" >> $my_run_log;
-   
-   # cleanup (if flag is used)
-   if [[ $CLEAN -eq 1 ]]; then
-       echo "cleanup" >> $my_run_log;
-       sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
-       sudo rm $mate_1_basename;
-       sudo rm $mate_2_basename;
-       sudo rm $tar_name;
-       echo `date`                              >> $my_run_log;
-       echo "Done with cleanup" >> $my_run_log;
-   else
-       echo `date`                              >> $my_run_log;
-       echo "No cleanup" >> $my_run_log;
-   fi
-
-   # # copy current logs to the output directory
-   # echo "copying logs" >> $my_run_log;
-   # sudo cp $my_fastq_log $SAVEDIR/;
-   # sudo cp $my_tar_log $SAVEDIR/;
-   # sudo cp $my_error_log $SAVEDIR/;
-   # sudo cp $my_run_log $SAVEDIR/;
-   # echo "Done copying logs" >> $my_run_log;
-
-   echo `date`                              >> $my_run_log;
-   echo "ALL DONE WITH  $pair_name" >> $my_run_log;
-   echo "" >> $my_run_log;
-
-   # close sudo su
-   # sudo -k;
-   # close tmux session
-   # exit;
-   
+	## run load and run the docker tool
+	echo "running the Docker..." >> $my_run_log;
+	
+	# start sudo su
+	# tmux;
+	# sudo su;
+	sudo docker load -i $DOCKERTAR;
+	sudo python $PYTHONSCRIPT;
+	#sudo -k;
+	echo `date`                              >> $my_run_log;
+	echo "DONE with Docker processing" >> $my_run_log;
+	# get the output
+	echo "saving Docker output" >> $my_run_log;
+	## mkdir for output that my R script can use to combine outputs later
+	sudo mkdir -p $SAVEDIR/$pair_name/star_2_pass/;
+	## move the genes.fpkm_tracking file to the save location
+	echo "DOING THIS:" >> $my_run_log;
+	echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR$pair_name/star_2_pass/" >> $my_run_log;
+	sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR/$pair_name/star_2_pass/
+	echo `date`                              >> $my_run_log;
+	echo "DONE saving Docker output" >> $my_run_log;
+	
+	# cleanup (if flag is used)
+	if [[ $CLEAN -eq 1 ]]; then
+	    echo "cleanup" >> $my_run_log;
+	    sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
+	    sudo rm $mate_1_basename;
+	    sudo rm $mate_2_basename;
+	    sudo rm $tar_name;
+	    echo `date`                              >> $my_run_log;
+	    echo "Done with cleanup" >> $my_run_log;
+	else
+	    echo `date`                              >> $my_run_log;
+	    echo "No cleanup" >> $my_run_log;
+	fi
+	
+	# # copy current logs to the output directory
+	# echo "copying logs" >> $my_run_log;
+	# sudo cp $my_fastq_log $SAVEDIR/;
+	# sudo cp $my_tar_log $SAVEDIR/;
+	# sudo cp $my_error_log $SAVEDIR/;
+	# sudo cp $my_run_log $SAVEDIR/;
+	# echo "Done copying logs" >> $my_run_log;
+	
+	echo `date`                              >> $my_run_log;
+	echo "ALL DONE WITH  $pair_name" >> $my_run_log;
+	echo "" >> $my_run_log;
+	
+	# close sudo su
+	# sudo -k;
+	# close tmux session
+	# exit;
+	
+    fi;
 done;
 
 echo "" >> $my_run_log
