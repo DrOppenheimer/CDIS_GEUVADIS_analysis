@@ -17,9 +17,10 @@
 # As of now this script can download data via FTP (probably Parcel too - have to check), tar mate pairs, apply Stuti's docker, and
 # saves selected output from the docker to local disk (just the fpkm abundancees for the genes) 
 # FEATURES TO TEST
-# - parcel download
+# - Parcel download
 # FEATREUS TO ADD
-# - parcel upload
+# - Parcel upload
+# - Parcel stats
 # - select data procuts to upload
 # - make name of output generic (edit in Stuti's script run_docker.py )
 # - list of results to upload as separated list
