@@ -136,8 +136,8 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "-c was triggered, Parameter: $OPTARG" >&2
 	    CLEAN=1;
 	    ;;
-	d)
-	    echo "-d was triggered, Parameter: $OPTARG" >&2
+	z)
+	    echo "-z was triggered, Parameter: $OPTARG" >&2
 	    DEBUG=1;
 	    ;;
 	h)
@@ -168,7 +168,7 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "     -i|--parcelip      (string) Required with -u|--useparcel - ip address of the parcel server"
 	    echo "                                 Default = $PARCELIP"
 	    echo "     -c|--clean         (flag)   Optional - option to wipe non-saved results for each mate pair";
-	    echo "     -d|--debug         (flag)   Optional - run in debug mode";
+	    echo "     -z|--debug         (flag)   Optional - run in debug mode";
 	    echo "     -h|--help          (flag)   Optional - display this help/usage text"
 	    echo "";
 	    echo "USAGE";
@@ -252,7 +252,7 @@ echo "savedir:         "$SAVEDIR                    >> $my_run_log;
 echo "tempdir:         "$TEMPDIR                    >> $my_run_log;
 echo "pythonscript:    "$PYTHONSCRIPT               >> $my_run_log;
 echo "dockertar:       "$DOCKERTAR                  >> $my_run_log;
-echo "save_dir:        $SAVEDIR"                    >> $my_run_log;
+echo "save_dir:        "$SAVEDIR                    >> $my_run_log;
 echo ""                                             >> $my_run_log;
 # entry for parcel option
 if [[ $USEPARCEL -eq 1 ]]; then
@@ -267,7 +267,7 @@ else
      echo "clean:           OFF"                    >> $my_run_log;
 fi
 # entry for debug option
-if [[ $DEBUG -eq "-d" ]]; then
+if [[ $DEBUG -eq 1 ]]; then
      echo "debug:           ON"                     >> $my_run_log;
 else
      echo "debug:           OFF"                    >> $my_run_log;
