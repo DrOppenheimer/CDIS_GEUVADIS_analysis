@@ -272,7 +272,7 @@ if [[ $DEBUG -eq 1 ]]; then
 else
      echo "debug:           OFF"                    >> $my_run_log;
 fi
-echo "" >>                                          >> $my_run_log;
+echo ""                                             >> $my_run_log;
 
 # move to $TEMPDIR - where Stuti's docker expects the data to be
 mkdir -p $TEMPDIR;
