@@ -292,7 +292,7 @@ do
 	pair_name=`echo $mate_1_basename | cut -f 1 -d "_"`;
 	tar_name=$pair_name.fastq.tar.gz;
 	echo `date`                              >> $my_run_log;
-	echo "" >>                               >> $my_run_log;
+	echo ""                                  >> $my_run_log;
 	echo "processing:      $pair_name"       >> $my_run_log;
 	echo "pair_name:       $pair_name"       >> $my_run_log;
 	echo "mate_1:          $mate_1"          >> $my_run_log;
