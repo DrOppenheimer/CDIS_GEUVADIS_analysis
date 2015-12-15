@@ -97,13 +97,14 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
     
     # sub to import mixed data (numerical and text) - can be useed for data or metadata
     import_metadata <- function(group_table){ #, group_column, sample_names){
-    metadata_matrix <- as.matrix( # Load the metadata table (same if you use one or all columns)
-        read.table(
-            file=group_table,row.names=1,header=TRUE,sep="\t",
-            colClasses = "character", check.names=FALSE,
-            comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
+        metadata_matrix <- as.matrix( # Load the metadata table (same if you use one or all columns)
+            read.table(
+                file=group_table,row.names=1,header=TRUE,sep="\t",
+                colClasses = "character", check.names=FALSE,
+                comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
+            )
         )
-    )
+    }
     
     # option to load prereqs
     if( load_prereqs==TRUE ){
