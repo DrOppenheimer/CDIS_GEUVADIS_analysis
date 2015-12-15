@@ -199,7 +199,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
     if( export_R_table==TRUE ){
         output_object_name <- paste(output_prefix, ".combined_", my_dataype, sep ="")
         do.call("<<-",list(output_object_name, FPKM_matrix))
-        writeLines(
+        cat(
             paste(
                 "otuput file:           ", output_object_name, "\n",
                 sep="", collapse=""
