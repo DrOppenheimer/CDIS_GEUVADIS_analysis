@@ -56,58 +56,6 @@
 
 
 combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", output_prefix="my_data", load_prereqs=FALSE, export_R_table=FALSE, debug=FALSE){
-
-
-    # sub to read a list of IDs (adapted from matR: https://github.com/MG-RAST/matR)
-    readIDs<- function (filename, ...) 
-        {
-            y <- read.table(filename, colClasses = "character", sep = "\t", 
-                            ...)
-            if (nrow(y) > 1) {
-                if (ncol(y) > 1) {
-                    if (ncol(y) > 2) {
-                        warning("Your list has more than two columns, only the first two are used")
-                    }
-                    res <- as.character(y[, 1])
-                    names(res) <- as.character(y[, 2])
-                    res <- res[order(res)]
-                    res
-                }
-                else {
-                    res <- as.character(y[, 1])
-                    res <- res[order(res)]
-                    res
-                }
-            }
-            else {
-                warning("There was just one id in your list?")
-                res <- unlist(y[1, ], use.names = FALSE)
-                res
-            }
-        }
-
-
-    # sub to import numerical data
-    import_data <- function(file_name)
-        {
-            data.matrix(read.table(file_name, row.names=1, header=TRUE, sep="\t", comment.char="", quote="", check.names=FALSE))
-        }
-
-    # function to eport data in a format that can be easily read back into R
-    export_data <- function(data_object, file_name){
-        write.table(data_object, file=file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
-    }
-    
-    # sub to import mixed data (numerical and text) - can be useed for data or metadata
-    import_metadata <- function(group_table){ #, group_column, sample_names){
-        metadata_matrix <- as.matrix( # Load the metadata table (same if you use one or all columns)
-            read.table(
-                file=group_table,row.names=1,header=TRUE,sep="\t",
-                colClasses = "character", check.names=FALSE,
-                comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
-            )
-        )
-    }
     
     # option to load prereqs
     if( load_prereqs==TRUE ){
@@ -128,13 +76,13 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
     # create matrix to hold data and vector to hold colnames
     FPKM_matrix <- matrix()
     FPKM_colnames <- vector(mode="character")
-  
+    
     for (i in 1:length(my_ids)){
-  
+        
         if(debug==TRUE){print(paste("made it here (0)"))}
-
+        
         if(debug==TRUE){print(paste(my_ids[i]))}  
-
+        
         if(debug==TRUE){print(paste("made it here (0.1)"))}
         
         if( file.exists(paste(".", my_ids[i], sep="")) != FALSE ){
@@ -147,7 +95,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
             my_data_temp <- import_metadata(paste(".", my_ids[i], sep=""))
             
             if(debug==TRUE){print(paste(".", my_ids[i], sep=""))}
-
+            
             if(debug==TRUE){print(paste("made it here (0.3)"))}
             
             # Add name of current file to the colnames vector
@@ -226,46 +174,95 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
   
     }
     
-   # write summary to log
-    writeLines(
-        paste(
-            "##############################################################\n",
-            "###################### INPUT PARAMETERS ######################\n",
-            "paths_file:"    ,paths_file, "\n",
-            "my_datatype:"   ,my_datatype, "\n",
-            "output_prefix:" , output_prefix, "\n",
-            "load_prereps:"  , load_prereps, "\n",
-            "export_R_table:", export_R_table, "\n",
-            "debug:"         , debug, "\n",
-            "####################### OUTPUT SUMMARY #######################\n",
-            "output file:         ", output_name, "\n",
-            sep="", collapse=""
-        ),
-        con=log_file
-    )
+   ## # write summary to log
+   ##  writeLines(
+   ##      paste(
+   ##          "##############################################################\n",
+   ##          "###################### INPUT PARAMETERS ######################\n",
+   ##          "paths_file:"    ,paths_file, "\n",
+   ##          "my_datatype:"   ,my_datatype, "\n",
+   ##          "output_prefix:" , output_prefix, "\n",
+   ##          "load_prereps:"  , load_prereps, "\n",
+   ##          "export_R_table:", export_R_table, "\n",
+   ##          "debug:"         , debug, "\n",
+   ##          "####################### OUTPUT SUMMARY #######################\n",
+   ##          "output file:         ", output_name, "\n",
+   ##          sep="", collapse=""
+   ##      ),
+   ##      con=log_file
+   ##  )
 
-    # export table as an R object, send message to user
-    if( export_R_table==TRUE ){
-        output_object_name <- paste(output_prefix, ".combined_", my_dataype, sep ="")
-        do.call("<<-",list(output_object_name, FPKM_matrix))
-        writeLines(
-            paste(
-                "otuput file:           ", output_object_name, "\n",
-                sep="", collapse=""
-            ),
-            con=log_file
-        )
-        paste(
-            "otuput file:           ", output_object_name, "\n",
-            sep="", collapse=""
-        )
-    }
+   ##  # export table as an R object, send message to user
+   ##  if( export_R_table==TRUE ){
+   ##      output_object_name <- paste(output_prefix, ".combined_", my_dataype, sep ="")
+   ##      do.call("<<-",list(output_object_name, FPKM_matrix))
+   ##      writeLines(
+   ##          paste(
+   ##              "otuput file:           ", output_object_name, "\n",
+   ##              sep="", collapse=""
+   ##          ),
+   ##          con=log_file
+   ##      )
+   ##      paste(
+   ##          "otuput file:           ", output_object_name, "\n",
+   ##          sep="", collapse=""
+   ##      )
+   ##  }
     
                     
-     
 }
 
 
+# sub to read a list of IDs (adapted from matR: https://github.com/MG-RAST/matR)
+readIDs<- function (filename, ...) 
+    {
+        y <- read.table(filename, colClasses = "character", sep = "\t", 
+                        ...)
+        if (nrow(y) > 1) {
+            if (ncol(y) > 1) {
+                if (ncol(y) > 2) {
+                    warning("Your list has more than two columns, only the first two are used")
+                }
+                res <- as.character(y[, 1])
+                names(res) <- as.character(y[, 2])
+                res <- res[order(res)]
+                res
+            }
+            else {
+                res <- as.character(y[, 1])
+                res <- res[order(res)]
+                res
+            }
+        }
+        else {
+            warning("There was just one id in your list?")
+            res <- unlist(y[1, ], use.names = FALSE)
+            res
+        }
+    }
+
+
+# sub to import numerical data
+import_data <- function(file_name)
+    {
+        data.matrix(read.table(file_name, row.names=1, header=TRUE, sep="\t", comment.char="", quote="", check.names=FALSE))
+    }
+
+# function to eport data in a format that can be easily read back into R
+export_data <- function(data_object, file_name){
+    write.table(data_object, file=file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
+}
+    
+# sub to import mixed data (numerical and text) - can be useed for data or metadata
+import_metadata <- function(group_table){ #, group_column, sample_names){
+    metadata_matrix <- as.matrix( # Load the metadata table (same if you use one or all columns)
+        read.table(
+            file=group_table,row.names=1,header=TRUE,sep="\t",
+            colClasses = "character", check.names=FALSE,
+            comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
+        )
+    )
+}
 
   
   
