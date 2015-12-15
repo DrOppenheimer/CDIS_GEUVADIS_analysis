@@ -181,14 +181,14 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
         paste(
             "##############################################################\n",
             "###################### INPUT PARAMETERS ######################\n",
-            "paths_file:"    , paths_file, "\n",
-            "my_dataype:"    , my_dataype, "\n",
-            "output_prefix:" , output_prefix, "\n",
-            "load_prereqs:"  , load_prereqs, "\n",
-            "export_R_table:", export_R_table, "\n",
-            "debug:"         , debug, "\n",
+            "paths_file:              "    , paths_file, "\n",
+            "my_dataype:              "    , my_dataype, "\n",
+            "output_prefix:           " , output_prefix, "\n",
+            "load_prereqs:            "  , load_prereqs, "\n",
+            "export_R_table:          ", export_R_table, "\n",
+            "debug:                   "         , debug, "\n",
             "####################### OUTPUT SUMMARY #######################\n",
-            "output file:         ", output_name, "\n",
+            "output file:             ", output_name, "\n",
             sep="", collapse=""
         ),
         append=TRUE,
@@ -201,7 +201,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
         do.call("<<-",list(output_object_name, FPKM_matrix))
         cat(
             paste(
-                "otuput file:           ", output_object_name, "\n",
+                "otuput R dataframe:      ", output_object_name, "\n",
                 sep="", collapse=""
             ),
             append=TRUE,
@@ -209,7 +209,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
         )
         cat(
             paste(
-                "otuput file:           ", output_object_name, "\n",
+                "otuput R dataframe:      ", output_object_name, "\n",
                 sep="", collapse=""
             )
         )
