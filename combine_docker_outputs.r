@@ -6,8 +6,8 @@
 #   /PATH/ERRXXXXXX/star_2_pass/genes.fpkm_tracking
 # XXXXXX is unique, thes rest is not so use the ERR portion of the path to name the data
 # and that the paths_file looks like this
-#   /ERR1234/star_2_pass/genes.fpkm_tracking
-#   /ERR5678/star_2_pass/genes.fpkm_tracking
+#   ERR1234/star_2_pass/genes.fpkm_tracking
+#   ERR5678/star_2_pass/genes.fpkm_tracking
 #   ...
 
 ############################################################################################################################
@@ -75,7 +75,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
 
     # create matrix to hold data and vector to hold colnames
     FPKM_matrix <- matrix()
-    FPKM_colnames <- vector(mode="character")
+     <- vector(mode="character")
     
     for (i in 1:length(my_ids)){
         
@@ -100,9 +100,11 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
             
             if(debug==TRUE){print(paste("made it here (0.3)"))}
             
+
+            
             # Add name of current file to the colnames vector
             split_path_string <- unlist(strsplit(my_ids[i], split="/"))
-            my_data_name <- split_path_string[2]
+            my_data_name <- split_path_string[1]
 
             if(debug==TRUE){print(paste("made it here (0.4)"))}
             my_rownames <- row.names(my_data_temp) # NOT HUMAN READABLE
@@ -213,6 +215,9 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
     
                     
 }
+
+
+# Fix col_names
 
 
 # sub to read a list of IDs (adapted from matR: https://github.com/MG-RAST/matR)
