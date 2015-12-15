@@ -94,7 +94,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
             if(debug==TRUE){print(paste("made it here (0.2)"))}
             
             #my_data_temp <- import_metadataimport_metadata(paste(my_ids[i], sep=""))
-            my_data_temp <- import_metadataimport_metadata(my_ids[i])
+            my_data_temp <- import_metadata(my_ids[i])
             
             if(debug==TRUE){print(paste(my_ids[i], sep=""))}
             
