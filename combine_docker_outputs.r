@@ -55,7 +55,7 @@
   # FPKM_status
 
 
-combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", output_prefix="my_data", load_prereqs=FALSE, debug=FALSE){
+combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", output_prefix="my_data", load_prereqs=FALSE, export_R_table=FALSE, debug=FALSE){
 
 
     # sub to read a list of IDs (adapted from matR: https://github.com/MG-RAST/matR)
@@ -93,7 +93,10 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
             data.matrix(read.table(file_name, row.names=1, header=TRUE, sep="\t", comment.char="", quote="", check.names=FALSE))
         }
 
-    #
+    # function to eport data in a format that can be easily read back into R
+    export_data <- function(data_object, file_name){
+        write.table(data_object, file=file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
+    }
     
     # sub to import mixed data (numerical and text) - can be useed for data or metadata
     import_metadata <- function(group_table){ #, group_column, sample_names){
@@ -222,7 +225,44 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
         }
   
     }
+    
+   # write summary to log
+    writeLines(
+        paste(
+            "##############################################################\n",
+            "###################### INPUT PARAMETERS ######################\n",
+            "paths_file:"    ,paths_file, "\n",
+            "my_datatype:"   ,my_datatype, "\n",
+            "output_prefix:" , output_prefix, "\n",
+            "load_prereps:"  , load_prereps, "\n",
+            "export_R_table:", export_R_table, "\n",
+            "debug:"         , debug, "\n",
+            "####################### OUTPUT SUMMARY #######################\n",
+            "output file:         ", output_name, "\n",
+            sep="", collapse=""
+        ),
+        con=log_file
+    )
 
+    # export table as an R object, send message to user
+    if( export_R_table==TRUE ){
+        output_object_name <- paste(output_prefix, ".combined_", my_dataype, sep ="")
+        do.call("<<-",list(output_object_name, FPKM_matrix))
+        writeLines(
+            paste(
+                "otuput file:           ", output_object_name, "\n",
+                sep="", collapse=""
+            ),
+            con=log_file
+        )
+        paste(
+            "otuput file:           ", output_object_name, "\n",
+            sep="", collapse=""
+        )
+    }
+    
+                    
+     
 }
 
 
