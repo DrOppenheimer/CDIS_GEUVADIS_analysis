@@ -177,7 +177,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
     }
     
    # write summary to log
-    writeLines(
+    cat(
         paste(
             "##############################################################\n",
             "###################### INPUT PARAMETERS ######################\n",
@@ -191,7 +191,8 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
             "output file:         ", output_name, "\n",
             sep="", collapse=""
         ),
-        con=log_file
+        append=TRUE,
+        file=log_file
     )
 
     # export table as an R object, send message to user
@@ -203,11 +204,14 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
                 "otuput file:           ", output_object_name, "\n",
                 sep="", collapse=""
             ),
-            con=log_file
+            append=TRUE,
+            file=log_file
         )
-        paste(
-            "otuput file:           ", output_object_name, "\n",
-            sep="", collapse=""
+        cat(
+            paste(
+                "otuput file:           ", output_object_name, "\n",
+                sep="", collapse=""
+            )
         )
     }
     
