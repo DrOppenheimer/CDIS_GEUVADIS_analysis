@@ -184,7 +184,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
             "paths_file:"    , paths_file, "\n",
             "my_dataype:"    , my_dataype, "\n",
             "output_prefix:" , output_prefix, "\n",
-            "load_prereps:"  , load_prereps, "\n",
+            "load_prereqs:"  , load_prereqs, "\n",
             "export_R_table:", export_R_table, "\n",
             "debug:"         , debug, "\n",
             "####################### OUTPUT SUMMARY #######################\n",
