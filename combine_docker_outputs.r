@@ -176,40 +176,40 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
   
     }
     
-   ## # write summary to log
-   ##  writeLines(
-   ##      paste(
-   ##          "##############################################################\n",
-   ##          "###################### INPUT PARAMETERS ######################\n",
-   ##          "paths_file:"    ,paths_file, "\n",
-   ##          "my_datatype:"   ,my_datatype, "\n",
-   ##          "output_prefix:" , output_prefix, "\n",
-   ##          "load_prereps:"  , load_prereps, "\n",
-   ##          "export_R_table:", export_R_table, "\n",
-   ##          "debug:"         , debug, "\n",
-   ##          "####################### OUTPUT SUMMARY #######################\n",
-   ##          "output file:         ", output_name, "\n",
-   ##          sep="", collapse=""
-   ##      ),
-   ##      con=log_file
-   ##  )
+   # write summary to log
+    writeLines(
+        paste(
+            "##############################################################\n",
+            "###################### INPUT PARAMETERS ######################\n",
+            "paths_file:"    ,paths_file, "\n",
+            "my_datatype:"   ,my_datatype, "\n",
+            "output_prefix:" , output_prefix, "\n",
+            "load_prereps:"  , load_prereps, "\n",
+            "export_R_table:", export_R_table, "\n",
+            "debug:"         , debug, "\n",
+            "####################### OUTPUT SUMMARY #######################\n",
+            "output file:         ", output_name, "\n",
+            sep="", collapse=""
+        ),
+        con=log_file
+    )
 
-   ##  # export table as an R object, send message to user
-   ##  if( export_R_table==TRUE ){
-   ##      output_object_name <- paste(output_prefix, ".combined_", my_dataype, sep ="")
-   ##      do.call("<<-",list(output_object_name, FPKM_matrix))
-   ##      writeLines(
-   ##          paste(
-   ##              "otuput file:           ", output_object_name, "\n",
-   ##              sep="", collapse=""
-   ##          ),
-   ##          con=log_file
-   ##      )
-   ##      paste(
-   ##          "otuput file:           ", output_object_name, "\n",
-   ##          sep="", collapse=""
-   ##      )
-   ##  }
+    # export table as an R object, send message to user
+    if( export_R_table==TRUE ){
+        output_object_name <- paste(output_prefix, ".combined_", my_dataype, sep ="")
+        do.call("<<-",list(output_object_name, FPKM_matrix))
+        writeLines(
+            paste(
+                "otuput file:           ", output_object_name, "\n",
+                sep="", collapse=""
+            ),
+            con=log_file
+        )
+        paste(
+            "otuput file:           ", output_object_name, "\n",
+            sep="", collapse=""
+        )
+    }
     
                     
 }
