@@ -17,11 +17,12 @@
 # As of now this script can download data via FTP (probably Parcel too - have to check), tar mate pairs, apply Stuti's docker, and
 # saves selected output from the docker to local disk (just the fpkm abundancees for the genes) 
 # FEATURES TO TEST
-# - Parcel download
+# - Parcel download [DONE]
 # FEATREUS TO ADD
-# - Parcel upload
+# - ARK parsing [DONE]
+# - Parcel upload 
 # - Parcel stats
-# - select data procuts to upload
+# - select data products to upload
 # - make name of output generic (edit in Stuti's script run_docker.py )
 # - list of results to upload as separated list
 # - generalize the results folder (from geuvadis_results)
@@ -38,6 +39,7 @@ TEMPDIR="/home/ubuntu/SCRATCH/";
 PYTHONSCRIPT="/home/ubuntu/git/CDIS_GEUVADIS_analysis/run_docker.py";
 DOCKERTAR="/home/ubuntu/SCRATCH/star_cuff_docker_1.8.tar";
 PARCELIP="192.170.232.76";
+ARKPREFIX="ftp";
 
 # Parse input options
 while getopts ":l:s:t:p:d:cdh" opt; do
@@ -114,6 +116,34 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
 	    ;;
+	a)
+	    echo "-a was triggered, Parameter: $OPTARG" >&2
+	    ARKPARSE=1
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    exit 1
+	    ;;
+	:)
+	    echo "Option -$OPTARG requires an argument." >&2
+	    exit 1
+	    ;;
+	b)
+	    echo "-b was triggered, Parameter: $OPTARG" >&2
+	    ARKPREFIX=$OPTARG
+	    if [[ "$ARKPREFIX" != "ftp" && "$ARKPREFIX" != "s3" ]] ; then # reject invalid ARK prefix values
+		echo "\"ftp\" and \"s3\" are the only accepted values for -b|--arkprefix"
+		exit 1
+	    fi
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    exit 1
+	    ;;
+	:)
+	    echo "Option -$OPTARG requires an argument." >&2
+	    exit 1
+	    ;;
 	# g)
 	#     echo "-g was triggered, Parameter: $OPTARG" >&2
 	#     GENOMEDIR=$OPTARG
@@ -128,7 +158,7 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	#     exit 1
 	#     ;;
 	u)
-	    echo "-c was triggered, Parameter: $OPTARG" >&2
+	    echo "-u was triggered, Parameter: $OPTARG" >&2
 	    USEPARCEL=1;
 	    ;;
 	
@@ -165,6 +195,8 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "     -u|--useparcel     (flag)   Optional - use parcel for download (OPTION NOT FUNCTIONAL YET)";
 	    echo "                                      Note: This option assumes you have Parcel installed and configured"
 	    echo "                                      127.0.0.1 parcel.opensciencedatacloud.org in /etc/hosts"
+	    echo "     -a|--arkparse      (flag)   Assume list contains ARKids, parse them to get URLs"
+	    echo "     -b|--arkprefix     (string)      Depends on -a, ARK prefix, must be \"ftp\" or \"s3\""
 	    echo "     -i|--parcelip      (string) Required with -u|--useparcel - ip address of the parcel server"
 	    echo "                                 Default = $PARCELIP"
 	    echo "     -c|--clean         (flag)   Optional - option to wipe non-saved results for each mate pair";
@@ -198,22 +230,22 @@ done
 # Check for requirements - fail with error if any are missing
 
 # LIST
-if [ ! -f $LIST ]; then
+if [ ! -l $LIST ]; then
     echo "List $LIST not supplied or does not exist - this is required"
     exit 1
 fi
 # SAVEDIR is created if it does not exist - no need for check
 # TEMPDIR 
-if [ ! -d $TEMPDIR ]; then
+if [ ! -t $TEMPDIR ]; then
     echo "Tempdir $TEMPDIR not supplied - this is a required argument"
     exit 1
 fi
 # PYTHONSCRIPT
-if [ ! -f $PYTHONSCRIPT ]; then
+if [ ! -p $PYTHONSCRIPT ]; then
     echo "pythonscript $PYTHONSCRIPT not supplied or does not exist - this is required"
     exit 1
 fi
-if [ ! -f $DOCKERTAR ]; then
+if [ ! -d $DOCKERTAR ]; then
     echo "dockertar $DOCKERTAR not supplied or does not exist - this is required"
     exit 1
 fi
@@ -253,6 +285,8 @@ echo "tempdir:         "$TEMPDIR                    >> $my_run_log;
 echo "pythonscript:    "$PYTHONSCRIPT               >> $my_run_log;
 echo "dockertar:       "$DOCKERTAR                  >> $my_run_log;
 echo "save_dir:        "$SAVEDIR                    >> $my_run_log;
+echo "arkparse:        "$ARKPARSE                   >> $my_run_log;
+echo "arkprefix:       "$ARKPREFIX                  >> $my_run_log
 echo ""                                             >> $my_run_log;
 # entry for parcel option
 if [[ $USEPARCEL -eq 1 ]]; then
@@ -281,24 +315,35 @@ cd $TEMPDIR;
 for i in `cat $LIST`;
 	
 do
+    echo ""                                  >> $my_run_log;
+    echo `date`                              >> $my_run_log;  
     # skip line if it starts with #
     echo $i | grep -e '^#' &> /dev/null
     if [[ $? != 0 ]]; then
 	# retireve targets from list - generate local filenames
-	mate_1=`echo $i | cut -f 1 -d ":"`;
-	mate_2=`echo $i | cut -f 2 -d ":"`;
+
+	# option for parsing ark to get ftp or s3 URL from ARK
+	if [[ $ARKPARSE == 1  ]]; then
+	    ark_1=`echo $i | cut -f 1 -d ":"`;
+	    ark_2=`echo $i | cut -f 2 -d ":"`;
+	    echo "ark_1:           $ark_1"       >> $my_run_log;
+	    echo "ark_1:           $ark_2"       >> $my_run_log;
+	    mate_1=`ARK_parser_beta.py $ark_1 -s $ARKPREFIX`;
+	    mate_2=`ARK_parser_beta.py $ark_2 -s $ARKPREFIX`;
+	else
+	    mate_1=`echo $i | cut -f 1 -d ":"`;
+	    mate_2=`echo $i | cut -f 2 -d ":"`;
+	fi
 	mate_1_basename=`basename $mate_1`;
 	mate_2_basename=`basename $mate_2`;
 	pair_name=`echo $mate_1_basename | cut -f 1 -d "_"`;
 	tar_name=$pair_name.fastq.tar.gz;
-	echo `date`                              >> $my_run_log;
-	echo ""                                  >> $my_run_log;
-	echo "processing:      $pair_name"       >> $my_run_log;
+	
 	echo "pair_name:       $pair_name"       >> $my_run_log;
 	echo "mate_1:          $mate_1"          >> $my_run_log;
 	echo "mate_1_basename: $mate_1_basename" >> $my_run_log;
 	echo "mate_2:          $mate_2"          >> $my_run_log;
-	echo "mate_1_basename: $mate_2_basename" >> $my_run_log;
+	echo "mate_2_basename: $mate_2_basename" >> $my_run_log;
 	echo "tar_name:        $tar_name"        >> $my_run_log;
 
 	# download both members of the mate pair
@@ -442,11 +487,6 @@ echo "" >> $my_run_log
 echo `date`                              >> $my_run_log;
 echo "ALL DONE PROCESSING $LIST" >> $my_run_log
 
-
-
-
-
-
 # # From Satish 12-3-15 # INSTALLING AND USING PARCEL
 # # Install
 # python setup.py develop
@@ -458,9 +498,6 @@ echo "ALL DONE PROCESSING $LIST" >> $my_run_log
 # parcel-udt2tcp localhost:9000 &
 # wget https://parcel.opensciencedatacloud.org:9000/asgc-geuvadis/ERR188021.tar.gz
 # # so if u see here.. I have  'python setup.py develop' twice.. this is because it failed first and then I had to do a apt-get install python-pip
-
-
-
 
 # Notes:
 # SCRATCH/
