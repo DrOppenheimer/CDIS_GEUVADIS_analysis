@@ -75,7 +75,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
 
     # create matrix to hold data and vector to hold colnames
     FPKM_matrix <- matrix()
-     <- vector(mode="character")
+    FPKM_colnames <- vector(mode="character")
     
     for (i in 1:length(my_ids)){
         
@@ -99,8 +99,6 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
             if(debug==TRUE){print(paste("./", my_ids[i], sep=""))}
             
             if(debug==TRUE){print(paste("made it here (0.3)"))}
-            
-
             
             # Add name of current file to the colnames vector
             split_path_string <- unlist(strsplit(my_ids[i], split="/"))
