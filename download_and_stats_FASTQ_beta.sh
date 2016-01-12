@@ -230,22 +230,22 @@ done
 # Check for requirements - fail with error if any are missing
 
 # LIST
-if [ ! -l $LIST ]; then
+if [ ! -e $LIST ]; then
     echo "List $LIST not supplied or does not exist - this is required"
     exit 1
 fi
 # SAVEDIR is created if it does not exist - no need for check
 # TEMPDIR 
-if [ ! -t $TEMPDIR ]; then
-    echo "Tempdir $TEMPDIR not supplied - this is a required argument"
+if [ ! -d $TEMPDIR ]; then
+    echo "Tempdir $TEMPDIR not supplied or is not a directory - this is a required argument"
     exit 1
 fi
 # PYTHONSCRIPT
-if [ ! -p $PYTHONSCRIPT ]; then
+if [ ! -e $PYTHONSCRIPT ]; then
     echo "pythonscript $PYTHONSCRIPT not supplied or does not exist - this is required"
     exit 1
 fi
-if [ ! -d $DOCKERTAR ]; then
+if [ ! -e $DOCKERTAR ]; then
     echo "dockertar $DOCKERTAR not supplied or does not exist - this is required"
     exit 1
 fi
