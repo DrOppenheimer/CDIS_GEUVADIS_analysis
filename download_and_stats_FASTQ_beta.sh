@@ -43,7 +43,7 @@ PARCELIP="192.170.232.76";
 ARKPREFIX="ftp";
 
 # Parse input options
-while getopts ":l:x:s:t:p:d:cdh" opt; do
+while getopts ":l:s:t:p:d:xcdh" opt; do
     case $opt in
 	l)
 	    echo "-l was triggered, Parameter: $OPTARG" >&2
