@@ -394,7 +394,7 @@ do
 	    #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
 
 	    if [[ $USEPROXY -eq 1 ]]; then
-		with proxy wget $mate_1;
+		with_proxy wget $mate_1;
 		echo `date`                              >> $my_run_log;
 		echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
 		echo "downloading $mate_2" >> $my_run_log;
