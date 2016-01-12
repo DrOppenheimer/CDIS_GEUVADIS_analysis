@@ -43,7 +43,7 @@ PARCELIP="192.170.232.76";
 ARKPREFIX="ftp";
 
 # Parse input options
-while getopts ":l:s:t:p:d:cdh" opt; do
+while getopts ":l:x:s:t:p:d:cdh" opt; do
     case $opt in
 	l)
 	    echo "-l was triggered, Parameter: $OPTARG" >&2
@@ -56,6 +56,10 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	:)
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
+	    ;;
+	x)
+	    echo "-x was triggered, Parameter: $OPTARG" >&2
+	    USEPROXY=1;
 	    ;;
 	s)
 	    echo "-s was triggered, Parameter: $OPTARG" >&2
@@ -158,10 +162,6 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	#     echo "Option -$OPTARG requires an argument." >&2
 	#     exit 1
 	#     ;;
-	x)
-	    echo "-x was triggered, Parameter: $OPTARG" >&2
-	    USEPROXY=1;
-	    ;;
 	u)
 	    echo "-u was triggered, Parameter: $OPTARG" >&2
 	    USEPARCEL=1;
