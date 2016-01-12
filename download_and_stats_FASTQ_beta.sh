@@ -34,6 +34,7 @@
 
 # Set defaults
 LIST="err_list_1_of_4.11-18-15.txt.test";
+USEPROXY=0;
 SAVEDIR="/home/ubuntu/SCRATCH/saved_results";
 TEMPDIR="/home/ubuntu/SCRATCH/";
 PYTHONSCRIPT="/home/ubuntu/git/CDIS_GEUVADIS_analysis/run_docker.py";
@@ -55,6 +56,10 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	:)
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
+	    ;;
+	x)
+	    echo "-x was triggered, Parameter: $OPTARG" >&2
+	    USEPROXY=1;
 	    ;;
 	s)
 	    echo "-s was triggered, Parameter: $OPTARG" >&2
@@ -161,7 +166,6 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "-u was triggered, Parameter: $OPTARG" >&2
 	    USEPARCEL=1;
 	    ;;
-	
 	c)
 	    echo "-c was triggered, Parameter: $OPTARG" >&2
 	    CLEAN=1;
@@ -183,7 +187,8 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "OPTIONS:";
 	    echo "     -l|--list          (string) Required - filename of list that contains the url list";
 	    echo "                                 Default = \"$LIST\"";
-	    echo"                                  Lines that start with a \"#\" will be skipped"
+	    echo "                                  Lines that start with a \"#\" will be skipped"
+	    echo "     -x|--useproxy      (flag)   Use proxy ( proxy must be configured in ~/.bashrc )";
 	    echo "     -s|--savedir       (string) Required - path for output";
 	    echo "                                 Default = \"$SAVEDIR\"";
 	    echo "     -t|--tempdir       (string) Dir to run Docker tool";
@@ -280,6 +285,7 @@ echo "arguments: "$@                                >> $my_run_log;
 echo $start_date                                    >> $my_run_log;
 echo ""                                             >> $my_run_log;
 echo "list:            "$LIST                       >> $my_run_log;
+echo "useproxy         "$USEPROXY                   >> $my_run_log;
 echo "savedir:         "$SAVEDIR                    >> $my_run_log;
 echo "tempdir:         "$TEMPDIR                    >> $my_run_log;
 echo "pythonscript:    "$PYTHONSCRIPT               >> $my_run_log;
@@ -355,13 +361,29 @@ do
 	    screen -dmS parcel
 	    screen -S parcel -X stuff "parcel-tcp2udt $PARCELIP:9000\n"
 	    # perform downloads with parcel
-	    wget $mate_1;
-	    echo `date`                              >> $my_run_log;
-	    echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
-	    echo "downloading $mate_2" >> $my_run_log;
-	    wget $mate_2;
-	    echo `date`                              >> $my_run_log;
-	    echo "DONE downloading $mate_2" >> $my_run_log;
+
+	    if [[ $USEPROXY -eq 1 ]]; then
+		with_proxy wget $mate_1;
+		echo `date`                              >> $my_run_log;
+		echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
+		echo "downloading $mate_2" >> $my_run_log;
+	    else
+		wget $mate_1;
+		echo `date`                              >> $my_run_log;
+		echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
+		echo "downloading $mate_2" >> $my_run_log;
+	    fi
+
+	    if [[ $USEPROXY -eq 1 ]]; then
+		with_proxy wget $mate_2;
+		echo `date`                              >> $my_run_log;
+		echo "DONE downloading $mate_2" >> $my_run_log;
+	    else
+		wget $mate_2;
+		echo `date`                              >> $my_run_log;
+		echo "DONE downloading $mate_2" >> $my_run_log;
+	    fi
+		
 	    # quit parcel session
 	    screen -r parcel -X kill
 	    echo `date`                              >> $my_run_log;
@@ -370,13 +392,30 @@ do
 	    # download without parcel
 	    echo "downloading $mate_1 withOUT parcel" >> $my_run_log;
 	    #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
-	    wget $mate_1;
-	    echo `date`                              >> $my_run_log;
-	    echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
-	    echo "downloading $mate_2" >> $my_run_log;
-	    wget $mate_2;
-	    echo `date`                              >> $my_run_log;
-	    echo "DONE downloading $mate_2" >> $my_run_log;
+
+	    if [[ $USEPROXY -eq 1 ]]; then
+		with proxy wget $mate_1;
+		echo `date`                              >> $my_run_log;
+		echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
+		echo "downloading $mate_2" >> $my_run_log;
+	    else
+		wget $mate_1;
+		echo `date`                              >> $my_run_log;
+		echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
+		echo "downloading $mate_2" >> $my_run_log;
+	    fi
+	    
+	    if [[ $USEPROXY -eq 1 ]]; then
+		with_proxy wget $mate_2;
+		echo `date`                              >> $my_run_log;
+		echo "DONE downloading $mate_2" >> $my_run_log;
+	    else
+		wget $mate_2;
+		echo `date`                              >> $my_run_log;
+		echo "DONE downloading $mate_2" >> $my_run_log;
+	    fi
+	    
+	    
 	fi
 	# create tar from individual mates
 	echo "creating tar $tar_name" >> $my_run_log;
