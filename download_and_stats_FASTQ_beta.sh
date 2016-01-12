@@ -57,10 +57,6 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
 	    ;;
-	x)
-	    echo "-x was triggered, Parameter: $OPTARG" >&2
-	    USEPROXY=1;
-	    ;;
 	s)
 	    echo "-s was triggered, Parameter: $OPTARG" >&2
 	    SAVEDIR=$OPTARG
@@ -162,6 +158,10 @@ while getopts ":l:s:t:p:d:cdh" opt; do
 	#     echo "Option -$OPTARG requires an argument." >&2
 	#     exit 1
 	#     ;;
+	x)
+	    echo "-x was triggered, Parameter: $OPTARG" >&2
+	    USEPROXY=1;
+	    ;;
 	u)
 	    echo "-u was triggered, Parameter: $OPTARG" >&2
 	    USEPARCEL=1;
