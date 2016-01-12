@@ -363,6 +363,7 @@ do
 	    # perform downloads with parcel
 
 	    if [[ $USEPROXY -eq 1 ]]; then
+		source ~/.bashrc;
 		with_proxy wget $mate_1;
 		echo `date`                              >> $my_run_log;
 		echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
@@ -375,6 +376,7 @@ do
 	    fi
 
 	    if [[ $USEPROXY -eq 1 ]]; then
+		source ~/.bashrc;
 		with_proxy wget $mate_2;
 		echo `date`                              >> $my_run_log;
 		echo "DONE downloading $mate_2" >> $my_run_log;
@@ -394,6 +396,7 @@ do
 	    #wget $mate_1 2 >> $my_error_log 1 >> $my_run_log; # this causes an error
 
 	    if [[ $USEPROXY -eq 1 ]]; then
+		source ~/.bashrc;
 		with_proxy wget $mate_1;
 		echo `date`                              >> $my_run_log;
 		echo "DONE downloading $mate_1 withOUT parcel" >> $my_run_log;
@@ -406,6 +409,7 @@ do
 	    fi
 	    
 	    if [[ $USEPROXY -eq 1 ]]; then
+		source ~/.bashrc;
 		with_proxy wget $mate_2;
 		echo `date`                              >> $my_run_log;
 		echo "DONE downloading $mate_2" >> $my_run_log;
