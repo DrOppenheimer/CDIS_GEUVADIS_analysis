@@ -379,6 +379,7 @@ do
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
+			sleep 5;
 		    else
 			$dl_complete=$(( ${$dl_complete}+1 ))
 		    fi
@@ -398,6 +399,7 @@ do
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
+			sleep 5;
 		    else
 			$dl_complete=$(( ${$dl_complete}+1 ))
 		    fi
@@ -424,6 +426,7 @@ do
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
+			sleep 5;
 		    else
 			$dl_complete=$(( ${$dl_complete}+1 ))
 		    fi
@@ -442,6 +445,7 @@ do
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
+			sleep 5;
 		    else
 			$dl_complete=$(( ${$dl_complete}+1 ))
 		    fi
@@ -476,6 +480,7 @@ do
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
+			sleep 5;
 		    else
 			$dl_complete=$(( ${$dl_complete}+1 ))
 		    fi
@@ -495,6 +500,7 @@ do
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
+			sleep 5;
 		    else
 			$dl_complete=$(( ${$dl_complete}+1 ))
 		    fi
@@ -521,6 +527,7 @@ do
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
+			sleep 5;
 		    else
 			$dl_complete=$(( ${$dl_complete}+1 ))
 		    fi
@@ -539,6 +546,7 @@ do
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
+			sleep 5;
 		    else
 			$dl_complete=$(( ${$dl_complete}+1 ))
 		    fi
