@@ -5,10 +5,16 @@
 # and that all of the file paths follow this pattern:
 #   /PATH/ERRXXXXXX/star_2_pass/genes.fpkm_tracking
 # XXXXXX is unique, thes rest is not so use the ERR portion of the path to name the data
-# and that the paths_file looks like this
-#   ERR1234/star_2_pass/genes.fpkm_tracking
-#   ERR5678/star_2_pass/genes.fpkm_tracking
+# and that the paths_file looks like this:
+#  ERR188021
+#  ERR188022
+#  ERR188023
 #   ...
+# The script will prefix this with "./" and add "/star_2_pass/genes.fpkm_tracking" to the end to get paths for the individual files
+# Typical usage
+# setwd(/Users/kevin/Documents/Projects/Geuvadis_data/All_666/results.as_of.1-4-15)
+# source(source("~/git/CDIS_GEUVADIS_analysis/combine_docker_outputs.r"))
+# combine_docker_outputs(paths_file="1-4-12.completed_list", output_prefix="1-4-12.completed", export_R_table=TRUE)
 
 ############################################################################################################################
 ############################################################################################################################
@@ -79,25 +85,27 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
     
     for (i in 1:length(my_ids)){
         
+        my_file=paste("./", my_ids[i], "/star_2_pass/genes.fpkm_tracking", sep="")
+        
         if(debug==TRUE){print(paste("made it here (0)"))}
         
         if(debug==TRUE){print(paste(my_ids[i], sep=""))}  
         
         if(debug==TRUE){print(paste("made it here (0.1)"))}
         
-        if( file.exists(paste("./", my_ids[i], sep="")) != FALSE ){
+        #if( file.exists(paste("./", my_ids[i], sep="")) != FALSE ){
+        if( file.exists(my_file) != FALSE ){
 
-            if(debug==TRUE){print(paste("FILE_STATUS: ", file.exists(paste(my_ids[i], sep=""))))}
-            if(debug==TRUE){print(paste("FILE_NAME  : ./", my_ids[i], sep=""))}
+            if(debug==TRUE){print(paste("FILE_STATUS: ", file.exists(paste(my_file, sep=""))))}
+            if(debug==TRUE){print(paste("FILE_NAME  : ", my_file, sep=""))}
             ### shell version of check:
             ### for i in `cat stuti_results.done_11-10-15`; do if [ -f ".$i" ];then echo ".$i exists"; fi; done
 
             if(debug==TRUE){print(paste("made it here (0.2)"))}
             
-            my_data_temp <- import_metadata(paste("./", my_ids[i], sep=""))
-            
-            if(debug==TRUE){print(paste("./", my_ids[i], sep=""))}
-            
+            #my_data_temp <- import_metadata(paste("./", my_ids[i], sep=""))
+            my_data_temp <- import_metadata(my_file)
+             
             if(debug==TRUE){print(paste("made it here (0.3)"))}
             
             # Add name of current file to the colnames vector
@@ -157,7 +165,7 @@ combine_docker_outputs <- function(paths_file="test_list", my_dataype="FPKM", ou
 
         }else{
     
-            cat(paste("./", my_ids[i], "DOES NOT EXIST"), sep="\n", file=log_file, append=TRUE)
+            cat(paste(my_file, "DOES NOT EXIST"), sep="\n", file=log_file, append=TRUE)
             # subloop to add the column names when on the last sample (make this a sub)
             if( i == length(my_ids) ){ # take care of the last sample (add column headers)
                 # add column names

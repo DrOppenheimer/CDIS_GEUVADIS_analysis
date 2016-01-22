@@ -87,7 +87,7 @@ preprocessing_tool <- function(
     
     # log transform log(x+1)2
     if ( log_transform==TRUE ){
-      input_data <- log_data(input_data)
+      input_data <- log_data(input_data, pseudo_count)
     }
 
     regression_message <- "DESeq regression:      NA"
@@ -191,7 +191,7 @@ quickly"
       screen(2)
       graphics::boxplot(input_data, main=(paste(input_name," PREPROCESSED (", norm_method, " norm)", sep="", collapse="")),las=2, cex.axis=0.5)
       dev.off()
-      boxplot_message <- paste("output boxplot:       ", boxplots_file, "\n", sep="", collapse="")
+      boxplot_message <- paste("output boxplot:        ", boxplots_file, "\n", sep="", collapse="")
     }
 
 
