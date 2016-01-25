@@ -375,13 +375,13 @@ do
 		    with_proxy wget $mate_1;
 		    status_cmd=$?
 		    if [[ ${status_cmd} -gt 0 ]]; then
-			dl_fail=$(( ${dl_fail}+1 ));
+			dl_fail=$(($dl_fail+1));
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
 			sleep 5;
 		    else
-			dl_complete=$(( ${$dl_complete}+1 ))
+			dl_complete=$(($dl_complete+1))
 		    fi
 		done
 		echo `date`                              >> $my_run_log;
@@ -395,13 +395,13 @@ do
 		    wget $mate_1;
 		    status_cmd=$?
 		    if [[ ${status_cmd} -gt 0 ]]; then
-			dl_fail=$(( ${dl_fail}+1 ));
+			dl_fail=$(($dl_fail+1));
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
 			sleep 5;
 		    else
-			dl_complete=$(( ${$dl_complete}+1 ))
+			dl_complete=$(($dl_complete+1))
 		    fi
 		done
 		echo `date`                              >> $my_run_log;
@@ -422,13 +422,13 @@ do
 		    with_proxy wget $mate_2;
 		    status_cmd=$?
 		    if [[ ${status_cmd} -gt 0 ]]; then
-			dl_fail=$(( ${dl_fail}+1 ));
+			dl_fail=$(($dl_fail+1));
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
 			sleep 5;
 		    else
-			dl_complete=$(( ${$dl_complete}+1 ))
+			dl_complete=$(($dl_complete+1))
 		    fi
 		done
 		echo `date`                              >> $my_run_log;
@@ -441,13 +441,13 @@ do
 		    wget $mate_2;
 		    status_cmd=$?
 		    if [[ ${status_cmd} -gt 0 ]]; then
-			dl_fail=$(( ${dl_fail}+1 ));
+			dl_fail=$(($dl_fail+1));
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
 			sleep 5;
 		    else
-			dl_complete=$(( ${$dl_complete}+1 ))
+			dl_complete=$(($dl_complete+1))
 		    fi
 		done
 		echo `date`                              >> $my_run_log;
@@ -476,13 +476,13 @@ do
 		    with_proxy wget $mate_1;
 		    status_cmd=$?
 		    if [[ ${status_cmd} -gt 0 ]]; then
-			dl_fail=$(( ${dl_fail}+1 ));
+			dl_fail=$(($dl_fail+1));
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
 			sleep 5;
 		    else
-			dl_complete=$(( ${$dl_complete}+1 ))
+			dl_complete=$(($dl_complete+1))
 		    fi
 		done
 		echo `date`                              >> $my_run_log;
@@ -496,13 +496,13 @@ do
 		    wget $mate_1;
 		    status_cmd=$?
 		    if [[ ${status_cmd} -gt 0 ]]; then
-			dl_fail=$(( ${dl_fail}+1 ));
+			dl_fail=$(($dl_fail+1));
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
 			sleep 5;
 		    else
-			dl_complete=$(( ${$dl_complete}+1 ))
+			dl_complete=$(($dl_complete+1))
 		    fi
 		done
 		echo `date`                              >> $my_run_log;
@@ -523,13 +523,13 @@ do
 		    with_proxy wget $mate_2;
 		    status_cmd=$?
 		    if [[ ${status_cmd} -gt 0 ]]; then
-			dl_fail=$(( ${dl_fail}+1 ));
+			dl_fail=$(($dl_fail+1));
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
 			sleep 5;
 		    else
-			dl_complete=$(( ${$dl_complete}+1 ))
+			dl_complete=$(($dl_complete+1))
 		    fi
 		done
 		echo `date`                              >> $my_run_log;
@@ -542,13 +542,13 @@ do
 		    wget $mate_2;
 		    status_cmd=$?
 		    if [[ ${status_cmd} -gt 0 ]]; then
-			dl_fail=$(( ${dl_fail}+1 ));
+			dl_fail=$(($dl_fail+1));
 			echo "download fail: $dl_fail";
 			echo "download fail: $dl_fail" >> $my_run_log;
 			echo "download fail: $dl_fail" >> $my_error_log;
 			sleep 5;
 		    else
-			dl_complete=$(( ${$dl_complete}+1 ))
+			dl_complete=$(($dl_complete+1))
 		    fi
 		done
 		echo `date`                              >> $my_run_log;
