@@ -42,8 +42,15 @@ DOCKERTAR="/home/ubuntu/SCRATCH/star_cuff_docker_1.8.tar";
 PARCELIP="192.170.232.76";
 ARKPREFIX="ftp";
 
+# Hard coded variables
+FILELIST="filenames_1.txt"
+DOCKERID="0ede86ece3ce"
+OUTPUTDIR="/home/ubuntu/SCRATCH/geuvadis_results/"
+
+
+
 # Parse input options
-while getopts ":l:s:t:p:d:adbixuczh" opt; do
+while getopts ":l:f:k:o:s:t:p:d:adbixuczh" opt; do
     case $opt in
 	l)
 	    echo "-l was triggered, Parameter: $OPTARG" >&2
@@ -53,6 +60,36 @@ while getopts ":l:s:t:p:d:adbixuczh" opt; do
 	    echo "Invalid option: -$OPTARG" >&2
 	    exit 1
 	    ;;
+
+	
+	f)
+	    echo "-l was triggered, Parameter: $OPTARG" >&2
+	    FILELIST=$OPTARG
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    exit 1
+	    ;;
+	k)
+	    echo "-l was triggered, Parameter: $OPTARG" >&2
+	    DOCKERID=$OPTARG
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    exit 1
+	    ;;
+	o)
+	    echo "-l was triggered, Parameter: $OPTARG" >&2
+	    OUTPUTDIR=$OPTARG
+	    ;;
+	\?)
+	    echo "Invalid option: -$OPTARG" >&2
+	    exit 1
+	    ;;
+
+
+
+	
 	:)
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
@@ -188,6 +225,12 @@ while getopts ":l:s:t:p:d:adbixuczh" opt; do
 	    echo "     -l|--list          (string) Required - filename of list that contains the url list";
 	    echo "                                 Default = \"$LIST\"";
 	    echo "                                  Lines that start with a \"#\" will be skipped"
+	    echo "     -f|--filelist      (string) Required - file with list of files to process with docker (automatically generated)";
+	    echo "                                     Default = \"$FILELIST\"";
+	    echo "     -k|--dockerid      (string) Required - id of the docker to be used";
+	    echo "                                     Default = \"$DOCKERID\"";
+	    echo "     -o|--outputdir     (string) Required - temp output dir for docker output - moved from here to savedir";
+	    echo "                                     Default = \"$OUTPUTDIR\"";
 	    echo "     -x|--useproxy      (flag)   Use proxy ( proxy must be configured in ~/.bashrc )";
 	    echo "     -s|--savedir       (string) Required - path for output";
 	    echo "                                 Default = \"$SAVEDIR\"";
@@ -601,7 +644,7 @@ EOF
 	# tmux;
 	# sudo su;
 	sudo docker load -i $DOCKERTAR;
-	sudo python $PYTHONSCRIPT;
+	sudo python $PYTHONSCRIPT -f $LISTFILEE -d $DOCKERID -o $OUTPUTDIR ;
 	#sudo -k;
 	echo `date`                              >> $my_run_log;
 	echo "DONE with Docker processing" >> $my_run_log;
@@ -610,9 +653,9 @@ EOF
 	## mkdir for output that my R script can use to combine outputs later
 	sudo mkdir -p $SAVEDIR/$pair_name/star_2_pass/;
 	## move the genes.fpkm_tracking file to the save location
-	echo "DOING THIS:" >> $my_run_log;
-	echo "sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR$pair_name/star_2_pass/" >> $my_run_log;
-	sudo cp /mnt/SCRATCH/geuvadis_results/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR/$pair_name/star_2_pass/
+	echo "DOING THIS:" >> $my_run_log;	
+    	echo "sudo cp $OUTPUTDIR/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR/$pair_name/star_2_pass/" >> $my_run_log;
+	sudo cp $OUTPUTDIR/$pair_name/star_2_pass/genes.fpkm_tracking $SAVEDIR/$pair_name/star_2_pass/
 
 	# Once the new file sotre is ready, copy these results:
 	# May want to generalize upload results argument to accept a list of results to upload
@@ -631,7 +674,7 @@ EOF
 	# cleanup (if flag is used)
 	if [[ $CLEAN -eq 1 ]]; then
 	    echo "cleanup" >> $my_run_log;
-	    sudo rm -R /mnt/SCRATCH/geuvadis_results/$pair_name;
+	    sudo rm -R $OUTPUTDIR/$pair_name;
 	    sudo rm $mate_1_basename;
 	    sudo rm $mate_2_basename;
 	    sudo rm $tar_name;
