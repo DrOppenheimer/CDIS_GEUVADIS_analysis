@@ -20,6 +20,10 @@ parser.add_argument('-d','--docker_id', help='id of the docker image to use', re
 parser.add_argument('-o','--output_dir', help='directory path for output', required=False, default="/home/ubuntu/SCRATCH/geuvadis_results/")
 args = parser.parse_args()
 
+list_file = args.list_file
+docker_id = args.docker_id
+output_dir = args.output_dir
+
 #docker_id = "0ede86ece3ce"
 #f = open("filenames_1.txt", "r")
 f = open(list_file, "r")
