@@ -17,6 +17,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Script to run Stuti\'s RNASeq processing docker')
 parser.add_argument('-f','--list_file', help='list_of_files_to_process (*.fastq.tar.gz, a zip of mate pair fastq files)', required=False, default="filenames_1.txt")
 parser.add_argument('-d','--docker_id', help='id of the docker image to use', required=False, default="0ede86ece3ce")
+parser.add_argument('-i','--input_dir', help='directory path for input (*.fastq.tar.gz)', required=False, default="/home/ubuntu/SCRATCH/")
 parser.add_argument('-o','--output_dir', help='directory path for output', required=False, default="/home/ubuntu/SCRATCH/geuvadis_results/")
 args = parser.parse_args()
 

@@ -624,7 +624,7 @@ EOF
 	# tmux;
 	# sudo su;
 	sudo docker load -i $DOCKERTAR;
-	sudo python $PYTHONSCRIPT -f $FILELIST -d $DOCKERID -o $OUTPUTDIR ;
+	sudo python $PYTHONSCRIPT -f $FILELIST -d $DOCKERID -i $TEMPDIR -o $OUTPUTDIR ;
 	#sudo -k;
 	echo `date`                              >> $my_run_log;
 	echo "DONE with Docker processing" >> $my_run_log;
