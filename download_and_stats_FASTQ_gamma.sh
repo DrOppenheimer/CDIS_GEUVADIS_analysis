@@ -34,19 +34,16 @@
 
 # Set defaults
 LIST="err_list_1_of_4.11-18-15.txt.test";
+FILELIST="filenames_1.txt";
 USEPROXY=0;
 SAVEDIR="/home/ubuntu/SCRATCH/saved_results";
 TEMPDIR="/home/ubuntu/SCRATCH/";
+OUTPUTDIR="/home/ubuntu/SCRATCH/geuvadis_results/";
 PYTHONSCRIPT="/home/ubuntu/git/CDIS_GEUVADIS_analysis/run_docker.py";
 DOCKERTAR="/home/ubuntu/SCRATCH/star_cuff_docker_1.8.tar";
+DOCKERID="0ede86ece3ce";
 PARCELIP="192.170.232.76";
 ARKPREFIX="ftp";
-
-# Hard coded variables
-FILELIST="filenames_1.txt"
-DOCKERID="0ede86ece3ce"
-OUTPUTDIR="/home/ubuntu/SCRATCH/geuvadis_results/"
-
 
 
 # Parse input options
@@ -60,8 +57,6 @@ while getopts ":l:f:k:o:s:t:p:d:adbixuczh" opt; do
 	    echo "Invalid option: -$OPTARG" >&2
 	    exit 1
 	    ;;
-
-	
 	f)
 	    echo "-l was triggered, Parameter: $OPTARG" >&2
 	    FILELIST=$OPTARG
@@ -85,11 +80,7 @@ while getopts ":l:f:k:o:s:t:p:d:adbixuczh" opt; do
 	\?)
 	    echo "Invalid option: -$OPTARG" >&2
 	    exit 1
-	    ;;
-
-
-
-	
+	    ;;	
 	:)
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
@@ -186,19 +177,6 @@ while getopts ":l:f:k:o:s:t:p:d:adbixuczh" opt; do
 	    echo "Option -$OPTARG requires an argument." >&2
 	    exit 1
 	    ;;
-	# g)
-	#     echo "-g was triggered, Parameter: $OPTARG" >&2
-	#     GENOMEDIR=$OPTARG
-	#     ;;
-	# \?)
-	#     echo "Using Default" >&2
-	#     GENOMEDIR="/mnt/SCRATCH/geuvadis_genome/"
-	#     exit 1
-	#     ;;
-	# :)
-	#     echo "Option -$OPTARG requires an argument." >&2
-	#     exit 1
-	#     ;;
 	u)
 	    echo "-u was triggered, Parameter: $OPTARG" >&2
 	    USEPARCEL=1;
@@ -289,7 +267,7 @@ if [ ! -d $TEMPDIR ]; then
     exit 1
 fi
 # PYTHONSCRIPT
-if [ ! -e $PYTHONSCRIPT ]; then
+if [ ! -e $ ]; then
     echo "pythonscript $PYTHONSCRIPT not supplied or does not exist - this is required"
     exit 1
 fi
@@ -298,8 +276,10 @@ if [ ! -e $DOCKERTAR ]; then
     exit 1
 fi
 
-# create a directory for the outputs
+# create a directory for the final outputs
 mkdir -p $SAVEDIR;
+# create directory for docker outputs
+mkdir -p $OUTPUTDIR;
 
 # create filenames for log files 
 my_fastq_log=$SAVEDIR/$LIST.FASTQ_log.txt;
@@ -331,9 +311,9 @@ echo "list:            "$LIST                       >> $my_run_log;
 echo "useproxy         "$USEPROXY                   >> $my_run_log;
 echo "savedir:         "$SAVEDIR                    >> $my_run_log;
 echo "tempdir:         "$TEMPDIR                    >> $my_run_log;
+echo "outputdir:       "$OUTPUTDIR                  >> $my_run_log;
 echo "pythonscript:    "$PYTHONSCRIPT               >> $my_run_log;
 echo "dockertar:       "$DOCKERTAR                  >> $my_run_log;
-echo "save_dir:        "$SAVEDIR                    >> $my_run_log;
 echo "arkparse:        "$ARKPARSE                   >> $my_run_log;
 echo "arkprefix:       "$ARKPREFIX                  >> $my_run_log
 echo ""                                             >> $my_run_log;
@@ -644,7 +624,7 @@ EOF
 	# tmux;
 	# sudo su;
 	sudo docker load -i $DOCKERTAR;
-	sudo python $PYTHONSCRIPT -f $LISTFILEE -d $DOCKERID -o $OUTPUTDIR ;
+	sudo python $PYTHONSCRIPT -f $FILELIST -d $DOCKERID -o $OUTPUTDIR ;
 	#sudo -k;
 	echo `date`                              >> $my_run_log;
 	echo "DONE with Docker processing" >> $my_run_log;
