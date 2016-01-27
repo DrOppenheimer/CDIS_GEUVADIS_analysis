@@ -31,7 +31,7 @@ f = open(list_file, "r")
 for filename in f:
     filename = filename.rstrip()
     analysis_id = filename.replace(".fastq.tar.gz", "")
-    filepath = filepath+"/%s" %(filename)
+    filepath = output_dir+"/%s" %(filename)
     print "Processing "+analysis_id
     #output = "/home/ubuntu/SCRATCH/geuvadis_results/%s" %(analysis_id)
     output = output_dir+"/%s" %(analysis_id)
