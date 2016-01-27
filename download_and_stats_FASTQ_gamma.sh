@@ -204,11 +204,11 @@ while getopts ":l:f:k:o:s:t:p:d:adbixuczh" opt; do
 	    echo "                                 Default = \"$LIST\"";
 	    echo "                                  Lines that start with a \"#\" will be skipped"
 	    echo "     -f|--filelist      (string) Required - file with list of files to process with docker (automatically generated)";
-	    echo "                                     Default = \"$FILELIST\"";
+	    echo "                                 Default = \"$FILELIST\"";
 	    echo "     -k|--dockerid      (string) Required - id of the docker to be used";
-	    echo "                                     Default = \"$DOCKERID\"";
+	    echo "                                 Default = \"$DOCKERID\"";
 	    echo "     -o|--outputdir     (string) Required - temp output dir for docker output - moved from here to savedir";
-	    echo "                                     Default = \"$OUTPUTDIR\"";
+	    echo "                                 Default = \"$OUTPUTDIR\"";
 	    echo "     -x|--useproxy      (flag)   Use proxy ( proxy must be configured in ~/.bashrc )";
 	    echo "     -s|--savedir       (string) Required - path for output";
 	    echo "                                 Default = \"$SAVEDIR\"";
@@ -267,7 +267,7 @@ if [ ! -d $TEMPDIR ]; then
     exit 1
 fi
 # PYTHONSCRIPT
-if [ ! -e $ ]; then
+if [ ! -e $PYTHONSCRIPT ]; then
     echo "pythonscript $PYTHONSCRIPT not supplied or does not exist - this is required"
     exit 1
 fi
